@@ -1,0 +1,21 @@
+Twitch websocket tests:
+websocat -v wss://irc-ws.chat.twitch.tv:443
+
+PRIVMSG #sadbruh1 awdaw
+
+To connect:
+PASS oauth:<token>   token is generated from https://twitchapps.com/tmi/ is used as password oauth:fp93ue0z50vf00uk72j6whlp29g35i (permament???)
+
+NICK sadbruh1
+
+
+Commands: 
+
+PRIVMSG #sadbruh1 /clear
+https://dev.twitch.tv/docs/irc/guide
+
+
+Amazing...
+
+
+Twitch API requests: in postman
