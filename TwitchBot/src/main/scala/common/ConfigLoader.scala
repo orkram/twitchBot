@@ -10,7 +10,6 @@ object ConfigLoader {
   def loadConfig[A](config: Class[A])(implicit manifest: Manifest[A]): A = {
     implicit val formats: DefaultFormats = DefaultFormats
 
-    println(config.toString)
     val className = config.toString
       .split(" ")
       .flatMap(_.split(raw"\."))
@@ -22,13 +21,14 @@ object ConfigLoader {
     val s =
       conf.getConfig(className).root()
 
-    val expr = raw"(?<=\().+?(?=\))".r //crappy workaround
+    val expr =
+      raw"(?<=\().+?(?=\))".r //crappy workaround cause we get Config(Class(params)) when required Class(params)
 
-    val rawConfig = expr.findFirstMatchIn(s.toString) match {
+    val jsonConfig = expr.findFirstMatchIn(s.toString) match {
       case Some(x) => x.toString()
       case _       => "fail"
     }
 
-    read[A](rawConfig)
+    read[A](jsonConfig)
   }
 }

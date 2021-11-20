@@ -1,4 +1,4 @@
-package twitchWebsocket
+package configs
 
 case class TwitchWsConfig(
     url: String,

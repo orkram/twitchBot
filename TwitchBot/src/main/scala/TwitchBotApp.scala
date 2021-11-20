@@ -2,14 +2,18 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.ws.{Message, TextMessage, WebSocketRequest}
 import akka.stream.Materializer
+import akka.stream.alpakka.amqp.{WriteMessage, WriteResult}
 import akka.stream.scaladsl._
+import akka.util.ByteString
 import com.typesafe.config.ConfigFactory
-import common.{ConfigLoader, Logging}
-import twitchWebsocket.TwitchWsConfig
+import common.ConfigLoader
+import common.MessageLogger.logMessage
+import configs.TwitchWsConfig
+import rabbitmq.RmqMessageWriterFlow
 
 import scala.concurrent.Promise
 
-object TwitchBotApp extends App with Logging {
+object TwitchBotApp extends App {
 
   val config = ConfigFactory.load()
 
@@ -19,11 +23,19 @@ object TwitchBotApp extends App with Logging {
   val twitchWsConfig = ConfigLoader.loadConfig(classOf[TwitchWsConfig])
   val request = WebSocketRequest(twitchWsConfig.url)
 
+  val toRmqSink = Flow[Message]
+    .map(logMessage)
+    .map(m => TwitchMessage(m.asTextMessage.getStrictText))
+    .map {
+      case x: TwitchMessage if x.message.nonEmpty => x
+    }
+    .map(tm => WriteMessage(ByteString(tm.toString)))
+    .via(RmqMessageWriterFlow("test-consumer").amqpFlow)
+    .to(Sink.ignore)
+
   val flow: Flow[Message, Message, Promise[Option[Message]]] =
     Flow.fromSinkAndSourceMat(
-      Sink
-        .seq[Message]
-        .contramap[Message](x => logMessage(x)),
+      toRmqSink,
       Source(
         List(
           TextMessage("PASS " + twitchWsConfig.pass),
