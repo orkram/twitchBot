@@ -1,67 +1,40 @@
-import akka.NotUsed
 import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.ws.{Message, TextMessage, WebSocketRequest}
 import akka.stream.Materializer
-import akka.stream.alpakka.amqp.{WriteMessage, WriteResult}
-import akka.stream.scaladsl._
-import akka.util.ByteString
+import akka.stream.alpakka.amqp.AmqpUriConnectionProvider
 import com.typesafe.config.ConfigFactory
-import common.{ConfigLoader, TwitchMessage}
+import common.ConfigLoader
 import common.MessageLogger.logMessage
 import configs.TwitchWsConfig
-import org.json4s.DefaultFormats
-import rabbitmq.{RmqMessageReaderFlow, RmqMessageWriterFlow}
-import org.json4s.jackson.Serialization.{read, write}
-
-import scala.concurrent.Promise
+import processingFlows.ProcessingFlows
+import twitchWebsocket.TwitchWebSocketConnection
 
 object TwitchBotApp extends App {
 
   val config = ConfigFactory.load()
 
-  implicit val system: ActorSystem = ActorSystem("mySystem")
-  implicit val mat: Materializer = Materializer(system)
-
   val twitchWsConfig = ConfigLoader.loadConfig(classOf[TwitchWsConfig])
-  val request = WebSocketRequest(twitchWsConfig.url)
 
-  val rmqFlow = RmqMessageWriterFlow("test-consumer").amqpFlow
-
-  implicit val formats: DefaultFormats.type = DefaultFormats
-
-  val toRmqSink = Flow[Message]
-    .map(logMessage)
-    .map(m => TwitchMessage(m.asTextMessage.getStrictText))
-    .map {
-      case x: TwitchMessage if x.message.nonEmpty => x
-    }
-    .map(tm => WriteMessage(ByteString(write(tm))))
-    .via(rmqFlow)
-    .to(Sink.ignore)
-
-  val fromRmq: Source[TextMessage, NotUsed] =
-    RmqMessageReaderFlow("twitch-command-queue").amqpSource.map(s =>
-      TextMessage(s.bytes.decodeString(ByteString.UTF_8))
-    )
-
-  val initRmqConnectionSource = Source(
-    List(
-      TextMessage("PASS " + twitchWsConfig.pass),
-      TextMessage("NICK " + twitchWsConfig.nickname),
-      TextMessage("JOIN #" + twitchWsConfig.nickname)
-    )
+  val connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
+    "amqp://localhost:5672"
   )
-
-  val flow: Flow[Message, Message, Promise[Option[Message]]] =
-    Flow.fromSinkAndSourceMat(
-      toRmqSink,
-      Source
-        .combine(initRmqConnectionSource, fromRmq)(Concat(_))
-        .map(logMessage)
-        .concatMat(Source.maybe[Message])(Keep.right)
-    )(Keep.right)
+  implicit val system: ActorSystem = ActorSystem("mySystem1")
+  implicit val mat: Materializer = Materializer(system)
+  val queues = ProcessingFlows.flows(connectionProvider).map(_.queueName)
 
   val (upgradeResponse, promise) =
-    Http().singleWebSocketRequest(request, flow)
+    TwitchWebSocketConnection(
+      twitchWsConfig,
+      connectionProvider,
+      queues
+    )
+      .establishConnection()
+
+  val processingFlows =
+    ProcessingFlows
+      .flows(connectionProvider)
+      .map { graph =>
+        logMessage("Staring graph: " + graph.queueName)
+        graph.getGraph.run()
+      }
+  //TODO: restart logic, and error handling
 }

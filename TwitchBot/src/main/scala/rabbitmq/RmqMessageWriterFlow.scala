@@ -9,13 +9,12 @@ import common.MessageLogger.logMessage
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 
-case class RmqMessageWriterFlow(queueName: String) {
+case class RmqMessageWriterFlow(
+    queueName: String,
+    connectionProvider: AmqpConnectionProvider
+) {
 
   val queueDeclaration: QueueDeclaration = QueueDeclaration(queueName)
-
-  val connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
-    "amqp://localhost:5672"
-  )
 
   val settings: AmqpWriteSettings = AmqpWriteSettings(connectionProvider)
     .withRoutingKey(queueName)
