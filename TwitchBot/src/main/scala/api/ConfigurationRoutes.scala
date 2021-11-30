@@ -17,6 +17,8 @@ import scala.language.postfixOps
 
 case class ConfigurationRoutes()(implicit ec: ExecutionContext) {
 
+  val testResponse = WhiteListedDomain(1, "youtube.com/")
+
   implicit val formats: DefaultFormats = DefaultFormats
 
   implicit val whiteListMarshaller: ToEntityMarshaller[WhiteListedDomain] = {
@@ -27,8 +29,6 @@ case class ConfigurationRoutes()(implicit ec: ExecutionContext) {
       )
     }
   }
-
-  val testResponse = WhiteListedDomain(1, "youtube.com/")
 
   implicit val whiteListUnMarshaller: FromRequestUnmarshaller[
     WhiteListedDomain
@@ -61,4 +61,5 @@ case class ConfigurationRoutes()(implicit ec: ExecutionContext) {
           }
         }
     }
+
 }
