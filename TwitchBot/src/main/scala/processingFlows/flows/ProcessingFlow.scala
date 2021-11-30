@@ -43,7 +43,7 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
         read[TwitchMessage](s)
       }
 
-  private def process(): Flow[TwitchMessage, WriteResult, NotUsed] = {
+  private def process: Flow[TwitchMessage, WriteResult, NotUsed] = {
     Flow[TwitchMessage]
       //also potentially writes to database here? maybe
       .map {
@@ -63,7 +63,7 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
 
   def getGraph: RunnableGraph[NotUsed] = {
     fromRmq
-      .via(process())
+      .via(process)
       .map(x => logMessage(x.toString()))
       .to(Sink.ignore)
   }

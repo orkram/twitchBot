@@ -9,20 +9,9 @@ import akka.http.scaladsl.model.ws.{
   WebSocketRequest,
   WebSocketUpgradeResponse
 }
-import akka.stream.{ClosedShape, Materializer, OverflowStrategy}
+import akka.stream.Materializer
 import akka.stream.alpakka.amqp.{AmqpConnectionProvider, WriteMessage}
-import akka.stream.scaladsl.MergeHub.source
-import akka.stream.scaladsl.{
-  Broadcast,
-  Concat,
-  Flow,
-  GraphDSL,
-  Keep,
-  Merge,
-  RunnableGraph,
-  Sink,
-  Source
-}
+import akka.stream.scaladsl.{Concat, Flow, Keep, Sink, Source}
 import akka.util.ByteString
 import common.MessageLogger.logMessage
 import common.TwitchMessage
@@ -49,16 +38,6 @@ case class TwitchWebSocketConnection(
     RmqMessageWriterFlow("custom-command-queue", connectionProvider).amqpFlow
   }
 
-  private val toRmqSink = Flow[Message]
-    .map(logMessage)
-    .map(m => TwitchMessage(m.asTextMessage.getStrictText))
-    .map {
-      case x: TwitchMessage if x.message.nonEmpty => x
-    }
-    .map(tm => WriteMessage(ByteString(write(tm))))
-    .via(rmqWriterFlow)
-    .to(Sink.ignore)
-
   private val fromRmq: Source[TextMessage, NotUsed] =
     RmqMessageReaderFlow("twitch-command-queue", connectionProvider).amqpSource
       .map(s => TextMessage(s.bytes.decodeString(ByteString.UTF_8)))
@@ -70,6 +49,16 @@ case class TwitchWebSocketConnection(
       TextMessage("JOIN #" + config.nickname)
     )
   )
+
+  private val toRmqSink = Flow[Message]
+    .map(logMessage)
+    .map(m => TwitchMessage(m.asTextMessage.getStrictText))
+    .map {
+      case x: TwitchMessage if x.message.nonEmpty => x
+    }
+    .map(tm => WriteMessage(ByteString(write(tm))))
+    .via(rmqWriterFlow)
+    .to(Sink.ignore)
 
   private val flow: Flow[Message, Message, Promise[Option[Message]]] =
     Flow.fromSinkAndSourceMat(

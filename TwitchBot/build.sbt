@@ -14,5 +14,8 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.3" % Runtime, // why this logger required,
   "org.json4s" %% "json4s-jackson" % "4.0.0",
   "com.lightbend.akka" %% "akka-stream-alpakka-amqp" % "3.0.3",
-  "com.typesafe.akka" %% "akka-stream" % AkkaVersion
+  "com.lightbend.akka" %% "akka-stream-alpakka-slick" % "3.0.3",
+  "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
+  "org.postgresql" % "postgresql" % "42.2.5",
+  "org.scala-lang" % "scala-reflect" % scalaVersion.value
 )
