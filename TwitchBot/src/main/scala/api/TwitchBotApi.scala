@@ -9,7 +9,7 @@ import common.MessageLogger.logMessage
 
 import scala.concurrent.ExecutionContextExecutor
 
-object ConfigurationApi extends App {
+object TwitchBotApi {
 
   implicit val system =
     ActorSystem(Behaviors.empty, "api-system")
@@ -20,7 +20,9 @@ object ConfigurationApi extends App {
   val httpConfig =
     ConfigLoader.loadConfig(classOf[ConfigurationEndpointsConfig])
 
-  val bindingFuture =
+  val routes = ConfigurationRoutes().baseRoute
+
+  val runApi =
     Http()
       .newServerAt(httpConfig.uri, httpConfig.port)
       .bind(ConfigurationRoutes().baseRoute)

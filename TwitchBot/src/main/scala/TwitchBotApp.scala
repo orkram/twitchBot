@@ -1,6 +1,7 @@
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.alpakka.amqp.AmqpUriConnectionProvider
+import api.TwitchBotApi
 import com.typesafe.config.ConfigFactory
 import common.ConfigLoader
 import common.MessageLogger.logMessage
@@ -17,8 +18,10 @@ object TwitchBotApp extends App {
   val connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
     "amqp://localhost:5672"
   )
+
   implicit val system: ActorSystem = ActorSystem("mySystem1")
   implicit val mat: Materializer = Materializer(system)
+
   val queues = ProcessingFlows.flows(connectionProvider).map(_.queueName)
 
   val (upgradeResponse, promise) =
@@ -36,5 +39,8 @@ object TwitchBotApp extends App {
         logMessage("Staring graph: " + graph.queueName)
         graph.getGraph.run()
       }
+
+  val httpRoutesBinding = TwitchBotApi.runApi
+
   //TODO: restart logic, and error handling
 }

@@ -32,6 +32,6 @@ object DatabaseTestReader extends App {
 
   val query = Slick
     .source(TableQuery[PlayerTable].result)
-    .runWith(Sink.seq)
+    .runWith(Sink.ignore)
 
 }
