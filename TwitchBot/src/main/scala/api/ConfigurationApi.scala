@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContextExecutor
 object ConfigurationApi extends App {
 
   implicit val system =
-    ActorSystem(Behaviors.empty, "my-system")
+    ActorSystem(Behaviors.empty, "api-system")
 
   implicit val executionContext: ExecutionContextExecutor =
     system.executionContext
