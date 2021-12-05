@@ -7,6 +7,8 @@ import customCommands.CustomCommands
 import customCommands.commands.WithTwitchOutput
 import processingFlows.common.ProcessingFlow
 
+import scala.concurrent.Future
+
 case class CustomCommandFlow(connectionProvider: AmqpConnectionProvider)
     extends ProcessingFlow[WithTwitchOutput] {
 
@@ -24,14 +26,16 @@ case class CustomCommandFlow(connectionProvider: AmqpConnectionProvider)
 
   override def parseMessage(
       m: TwitchMessage
-  ): Option[WithTwitchOutput] = {
+  ): Future[Option[WithTwitchOutput]] = {
     val message = m.message.get
     val command :: params = message.split(' ').toList
 
-    CustomCommands
-      .knownCommands()
-      .find(_.signature == command.stripPrefix("!"))
-      .flatMap(x => x.apply(params))
+    Future.successful(
+      CustomCommands
+        .knownCommands()
+        .find(_.signature == command.stripPrefix("!"))
+        .flatMap(x => x.apply(params))
+    )
   }
 
   override def fromMessageToCommands(

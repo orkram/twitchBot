@@ -24,6 +24,15 @@ abstract class MarshallEntity[A <: AnyRef](implicit manifect: Manifest[A]) {
     }
   }
 
+  implicit val listMarshaller: ToEntityMarshaller[List[A]] = {
+    Marshaller.withFixedContentType(ContentTypes.`application/json`) { obj =>
+      HttpEntity(
+        ContentTypes.`application/json`,
+        Serialization.write[List[A]](obj).getBytes("UTF-8")
+      )
+    }
+  }
+
   implicit val unmarshaller: FromRequestUnmarshaller[A] =
     new FromRequestUnmarshaller[A] {
       override def apply(request: HttpRequest)(implicit

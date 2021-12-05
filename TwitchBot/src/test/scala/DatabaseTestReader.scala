@@ -1,12 +1,9 @@
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.alpakka.slick.scaladsl.{Slick, SlickSession}
-import akka.stream.scaladsl.{Sink, Source}
-import model.{Player, PlayerTable}
+import akka.stream.scaladsl.Sink
+import model.{WhiteListedDomain, WhiteListedDomainTable}
 import slick.lifted
-
-import java.time.LocalDate
-
 object DatabaseTestReader extends App {
   implicit val session: SlickSession = SlickSession.forConfig("slick-postgres")
 
@@ -18,20 +15,29 @@ object DatabaseTestReader extends App {
 
   val db = Database.forConfig("slick-postgres2")
   //setup db
-  db.run(
-    DBIO.seq(
-      lifted.TableQuery[PlayerTable].schema.create
-    )
-  )
+//  db.run(
+//    DBIO.seq(
+//      lifted.TableQuery[WhiteListedDomainTable].schema.create
+//    )
+//  )
   //put
   val create = DBIO.seq(
-    lifted.TableQuery[PlayerTable] ++= Seq(
-      Player(1, "name", "county", Some(LocalDate.now()))
+    lifted.TableQuery[WhiteListedDomainTable] ++= Seq(
+      WhiteListedDomain(1, "youtube.com")
     )
   )
 
+  val k = WhiteListedDomain(1, "youtube.com")
+
+  def delete(k: WhiteListedDomain) = DBIO.seq(
+    lifted.TableQuery[WhiteListedDomainTable].delete
+  )
+
+  db.run(delete(k))
+
   val query = Slick
-    .source(TableQuery[PlayerTable].result)
+    .source(TableQuery[WhiteListedDomainTable].result)
+    .map(x => println(x))
     .runWith(Sink.ignore)
 
 }

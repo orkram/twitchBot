@@ -17,5 +17,22 @@ https://dev.twitch.tv/docs/irc/guide
 
 Amazing...
 
+Twitch api auth: in postman
 
-Twitch API requests: in postman
+Twitch API requests: https://dev.twitch.tv/docs/api/reference
+
+Endpoint to hit: https://api.twitch.tv/helix/
+Authorization: Bearer Token
+
+
+
+@login=dem_boy;target-msg-id=e6c8a095-dbf5-4808-97df-abd9d904c459 :tmi.twitch.tv CLEARMSG #sadbruh1 :lets go
+
+@login=dem_boy;target-msg-id=e6c8a095-dbf5-4808-97df-abd9d904c459 :tmi.twitch.tv CLEARMSG #sadbruh1 :lets go
+
+
+PRIVMSG #sadbruh1 delete e3e4da5c-a8a3-425c-b639-e62b40380db9
+
+
+
+a8bcd33e-969d-4c13-8c80-9c01523ae7b8

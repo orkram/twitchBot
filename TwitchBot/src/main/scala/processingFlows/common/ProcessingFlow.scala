@@ -1,11 +1,13 @@
 package processingFlows.common
 
+import akka.stream.Supervision.Stop
 import akka.stream.alpakka.amqp.{
   AmqpConnectionProvider,
   WriteMessage,
   WriteResult
 }
-import akka.stream.scaladsl.{Flow, RunnableGraph, Sink, Source}
+import akka.stream.scaladsl.{Flow, RestartSource, Source}
+import akka.stream.{ActorAttributes, RestartSettings, Supervision}
 import akka.util.ByteString
 import akka.{Done, NotUsed}
 import common.MessageLogger.logMessage
@@ -15,7 +17,9 @@ import org.json4s.DefaultFormats
 import org.json4s.jackson.Serialization.read
 import rabbitmq.{RmqMessageReaderFlow, RmqMessageWriterFlow}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
 
 trait ProcessingFlow[O <: WithTwitchOutput] {
 
@@ -25,7 +29,7 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
 
   implicit val formats: DefaultFormats = DefaultFormats
 
-  def parseMessage(m: TwitchMessage): Option[O]
+  def parseMessage(m: TwitchMessage): Future[Option[O]]
 
   val connectionProvider: AmqpConnectionProvider
 
@@ -42,27 +46,43 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
         read[TwitchMessage](s)
       }
 
+  private val supervisorStrategy: Supervision.Decider = { e =>
+    logMessage(s"Flow has failed dramatically with exception $e")
+    Stop
+  }
+
   private def process: Flow[TwitchMessage, WriteResult, NotUsed] = {
     Flow[TwitchMessage]
-      //also potentially writes to database here? maybe
-      .map {
+      .mapAsync(1) {
         case x if isApplicableFor(x) =>
           logMessage(queueName + ": " + x)
           parseMessage(x)
-        case _ => None // if this case isn't handled, flow completes
+        case _ =>
+          Future(None) // if this case isn't handled, flow completes
+      }
+      .recover { case e =>
+        throw e
       }
       .mapConcat {
         case Some(message) => fromMessageToCommands(message)
         case None          => Nil
       }
       .via(toRmq)
+      .withAttributes(ActorAttributes.supervisionStrategy(supervisorStrategy))
   }
 
   def fromMessageToCommands(c: O): List[WriteMessage]
 
-  def getGraph: RunnableGraph[NotUsed] = {
-    fromRmq
-      .via(process)
-      .to(Sink.ignore)
+  private val restartConfig = RestartSettings(
+    10.seconds,
+    2.minutes,
+    0.2
+  )
+  def getGraph: Source[WriteResult, NotUsed] = {
+    RestartSource.onFailuresWithBackoff(restartConfig) { () =>
+      logMessage(s"Restarted flow")
+      fromRmq
+        .via(process)
+    }
   }
 }

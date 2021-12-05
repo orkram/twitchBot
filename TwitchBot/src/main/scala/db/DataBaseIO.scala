@@ -3,13 +3,15 @@ package db
 import akka.actor.ActorSystem
 import akka.stream.alpakka.slick.scaladsl.Slick
 import akka.stream.scaladsl.Sink
+import model.WhiteListedDomainTable
 import slick.jdbc.PostgresProfile.api._
-import slick.lifted.AbstractTable
+import slick.lifted
+import slick.lifted.{AbstractTable, TableQuery}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class DataBaseIO() extends DbConnection {
+object DataBaseIO extends DbConnection {
 
   implicit val system: ActorSystem = ActorSystem("dataBaseActor")
 
@@ -35,6 +37,14 @@ case class DataBaseIO() extends DbConnection {
         tableQuery ++= Seq(a)
       )
     ).map(_ => a)
+  }
+
+  def removeEntity[T <: AbstractTable[A], A](
+      tableQuery: DBIOAction[Int, NoStream, Effect.Write]
+  ): Future[Int] = {
+    db.run(
+      tableQuery
+    )
   }
 
 }
