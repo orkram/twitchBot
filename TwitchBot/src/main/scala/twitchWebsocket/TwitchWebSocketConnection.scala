@@ -34,10 +34,6 @@ case class TwitchWebSocketConnection(
 
   private val request = WebSocketRequest(config.url)
 
-  private val rmqWriterFlow = {
-    RmqMessageWriterFlow("custom-command-queue", connectionProvider).amqpFlow
-  }
-
   private val fromRmq: Source[TextMessage, NotUsed] =
     RmqMessageReaderFlow("twitch-command-queue", connectionProvider).amqpSource
       .map(s => TextMessage(s.bytes.decodeString(ByteString.UTF_8)))
@@ -46,6 +42,7 @@ case class TwitchWebSocketConnection(
     List(
       TextMessage("PASS " + config.pass),
       TextMessage("NICK " + config.nickname),
+      TextMessage("CAP REQ :twitch.tv/tags"),
       TextMessage("JOIN #" + config.nickname)
     )
   )
@@ -53,11 +50,19 @@ case class TwitchWebSocketConnection(
   private val toRmqSink = Flow[Message]
     .map(logMessage)
     .map(m => TwitchMessage(m.asTextMessage.getStrictText))
+    .map(logMessage)
     .map {
       case x: TwitchMessage if x.message.nonEmpty => x
     }
     .map(tm => WriteMessage(ByteString(write(tm))))
-    .via(rmqWriterFlow)
+    .flatMapConcat { message =>
+      val sources = queues.map { queueName =>
+        val toRmqFlow =
+          RmqMessageWriterFlow(queueName, connectionProvider).amqpFlow
+        Source(List(message)).via(toRmqFlow)
+      }
+      Source.zipN(sources)
+    }
     .to(Sink.ignore)
 
   private val flow: Flow[Message, Message, Promise[Option[Message]]] =

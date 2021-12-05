@@ -5,6 +5,7 @@ import akka.util.ByteString
 import common.TwitchMessage
 import customCommands.CustomCommands
 import customCommands.commands.WithTwitchOutput
+import processingFlows.common.ProcessingFlow
 
 case class CustomCommandFlow(connectionProvider: AmqpConnectionProvider)
     extends ProcessingFlow[WithTwitchOutput] {

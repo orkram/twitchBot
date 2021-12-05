@@ -1,4 +1,4 @@
-package processingFlows.flows
+package processingFlows.common
 
 import akka.stream.alpakka.amqp.{
   AmqpConnectionProvider,
@@ -39,7 +39,6 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
     RmqMessageReaderFlow(queueName, connectionProvider).amqpSource
       .map(s => s.bytes.decodeString(ByteString.UTF_8))
       .map { s =>
-        logMessage(s)
         read[TwitchMessage](s)
       }
 
@@ -48,7 +47,7 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
       //also potentially writes to database here? maybe
       .map {
         case x if isApplicableFor(x) =>
-          logMessage("Recognized command: " + x.message)
+          logMessage(queueName + ": " + x)
           parseMessage(x)
         case _ => None // if this case isn't handled, flow completes
       }
@@ -64,7 +63,6 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
   def getGraph: RunnableGraph[NotUsed] = {
     fromRmq
       .via(process)
-      .map(x => logMessage(x.toString()))
       .to(Sink.ignore)
   }
 }

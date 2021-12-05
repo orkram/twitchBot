@@ -5,7 +5,7 @@ import slick.jdbc.PostgresProfile.api._
 case class WhiteListedDomain(
     id: Long,
     allowedDomain: String
-)
+) extends Entity
 
 object WhiteListedDomain extends MarshallEntity[WhiteListedDomain] {
   def create(id: Long, allowedDomain: String): WhiteListedDomain =

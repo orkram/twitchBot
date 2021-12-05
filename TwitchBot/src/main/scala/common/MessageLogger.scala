@@ -14,6 +14,11 @@ object MessageLogger {
     message
   }
 
+  def logMessage(tm: TwitchMessage): TwitchMessage = {
+    logger.debug(tm.toString)
+    tm
+  }
+
   def logMessage(message: Message): Message = {
     logger.debug(
       message.asTextMessage.getStrictText

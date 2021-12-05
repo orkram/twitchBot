@@ -37,7 +37,4 @@ case class DataBaseIO() extends DbConnection {
     ).map(_ => a)
   }
 
-  def readEntity[A, Table <: AbstractTable[A]]
-      : Future[Seq[Table#TableElementType]] = ???
-
 }

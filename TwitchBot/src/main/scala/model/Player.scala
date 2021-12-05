@@ -8,7 +8,7 @@ case class Player(
     name: String,
     country: String,
     dob: Option[LocalDate]
-)
+) extends Entity
 
 object Player extends MarshallEntity[Player] {
   def apply(
