@@ -3,6 +3,8 @@ import akka.stream.Materializer
 import akka.stream.alpakka.slick.scaladsl.{Slick, SlickSession}
 import akka.stream.scaladsl.Sink
 import model.{
+  FilteredTerm,
+  FilteredTermTable,
   RecurringNotification,
   RecurringNotificationTable,
   WhiteListedDomain,
@@ -23,34 +25,31 @@ object DatabaseTestReader extends App {
 
   val db = Database.forConfig("slick-postgres2")
   //setup db
-  db.run(
-    DBIO.seq(
-      lifted.TableQuery[RecurringNotificationTable].schema.create
-    )
-  )
+//  db.run(
+//    DBIO.seq(
+//      lifted.TableQuery[FilteredTermTable].schema.create
+//    )
+//  )
   //put
-  def create(k: RecurringNotification) = DBIO.seq(
-    lifted.TableQuery[RecurringNotificationTable] ++= Seq(
+  def create(k: FilteredTerm) = DBIO.seq(
+    lifted.TableQuery[FilteredTermTable] ++= Seq(
       k
     )
   )
 
-  val k = RecurringNotification(
+  val k = FilteredTerm(
     2,
-    "youtube safe",
-    5.second.toSeconds,
-    OffsetDateTime.now()
+    "BatChest"
   )
-
-  def delete(k: WhiteListedDomain) = DBIO.seq(
-    lifted.TableQuery[WhiteListedDomainTable].delete
-  )
-
+//
+//  def delete(k: WhiteListedDomain) = DBIO.seq(
+//    lifted.TableQuery[WhiteListedDomainTable].delete
+//  )
+//
   db.run(create(k))
 
   val query = Slick
-    .source(TableQuery[RecurringNotificationTable].result)
-    .map(x => println(x.frequency))
+    .source(TableQuery[FilteredTermTable].result)
     .runWith(Sink.ignore)
 
 }

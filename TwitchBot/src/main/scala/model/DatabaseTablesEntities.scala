@@ -6,8 +6,9 @@ import slick.jdbc.PostgresProfile.api._
 
 object DatabaseTablesEntities {
 
-  val entitiesSchemas = DBIO.seq(
-    lifted.TableQuery[WhiteListedDomainTable].schema.create,
-    lifted.TableQuery[RecurringNotificationTable].schema.create
+  def entitiesSchemas = List(
+    DBIO.seq(lifted.TableQuery[WhiteListedDomainTable].schema.create),
+    DBIO.seq(lifted.TableQuery[FilteredTermTable].schema.create),
+    DBIO.seq(lifted.TableQuery[RecurringNotificationTable].schema.create)
   )
 }

@@ -46,5 +46,5 @@ case class UrlFilteringFlow(connectionProvider: AmqpConnectionProvider)
   }
 
   override def fromMessageToCommands(c: WithTwitchOutput): List[WriteMessage] =
-    c.outputCommands().map(x => WriteMessage(ByteString(x)))
+    c.outputCommands.map(x => WriteMessage(ByteString(x)))
 }

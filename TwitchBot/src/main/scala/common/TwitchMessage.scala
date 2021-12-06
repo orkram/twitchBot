@@ -17,7 +17,7 @@ object TwitchMessage {
 
   //:aristol1738!aristol1738@aristol1738.tmi.twitch.tv PRIVMSG #sadbruh1 :bb
   val messagePattern: Regex = """(?<=:(?!.*:))(.*?)(?=$)""".r
-  val nicknamePattern: Regex = """(?<=:)(.*?)(?=!)""".r
+  val nicknamePattern: Regex = """(?<=!)(.*?)(?=@)""".r
   val channelPattern: Regex = """(?<=#)(.*?)(?=\s)""".r
   val idPattern: Regex = """(?<=;id=)(.*?)(?=;)""".r
   def apply(m: String): TwitchMessage = {
