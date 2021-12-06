@@ -2,8 +2,16 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.alpakka.slick.scaladsl.{Slick, SlickSession}
 import akka.stream.scaladsl.Sink
-import model.{WhiteListedDomain, WhiteListedDomainTable}
+import model.{
+  RecurringNotification,
+  RecurringNotificationTable,
+  WhiteListedDomain,
+  WhiteListedDomainTable
+}
 import slick.lifted
+
+import java.time.OffsetDateTime
+import scala.concurrent.duration.DurationInt
 object DatabaseTestReader extends App {
   implicit val session: SlickSession = SlickSession.forConfig("slick-postgres")
 
@@ -15,29 +23,34 @@ object DatabaseTestReader extends App {
 
   val db = Database.forConfig("slick-postgres2")
   //setup db
-//  db.run(
-//    DBIO.seq(
-//      lifted.TableQuery[WhiteListedDomainTable].schema.create
-//    )
-//  )
+  db.run(
+    DBIO.seq(
+      lifted.TableQuery[RecurringNotificationTable].schema.create
+    )
+  )
   //put
-  val create = DBIO.seq(
-    lifted.TableQuery[WhiteListedDomainTable] ++= Seq(
-      WhiteListedDomain(1, "youtube.com")
+  def create(k: RecurringNotification) = DBIO.seq(
+    lifted.TableQuery[RecurringNotificationTable] ++= Seq(
+      k
     )
   )
 
-  val k = WhiteListedDomain(1, "youtube.com")
+  val k = RecurringNotification(
+    2,
+    "youtube safe",
+    5.second.toSeconds,
+    OffsetDateTime.now()
+  )
 
   def delete(k: WhiteListedDomain) = DBIO.seq(
     lifted.TableQuery[WhiteListedDomainTable].delete
   )
 
-  db.run(delete(k))
+  db.run(create(k))
 
   val query = Slick
-    .source(TableQuery[WhiteListedDomainTable].result)
-    .map(x => println(x))
+    .source(TableQuery[RecurringNotificationTable].result)
+    .map(x => println(x.frequency))
     .runWith(Sink.ignore)
 
 }

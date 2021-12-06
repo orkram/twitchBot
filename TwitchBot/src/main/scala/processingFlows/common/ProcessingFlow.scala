@@ -47,7 +47,7 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
       }
 
   private val supervisorStrategy: Supervision.Decider = { e =>
-    logMessage(s"Flow has failed dramatically with exception $e")
+    logMessage(s"Flow has failed dramatically with exception: $e")
     Stop
   }
 

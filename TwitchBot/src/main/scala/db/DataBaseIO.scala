@@ -39,7 +39,7 @@ object DataBaseIO extends DbConnection {
     ).map(_ => a)
   }
 
-  def removeEntity[T <: AbstractTable[A], A](
+  def updateEntity[T <: AbstractTable[A], A](
       tableQuery: DBIOAction[Int, NoStream, Effect.Write]
   ): Future[Int] = {
     db.run(

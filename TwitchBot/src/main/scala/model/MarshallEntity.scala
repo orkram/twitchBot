@@ -4,7 +4,7 @@ import akka.http.scaladsl.marshalling.{Marshaller, ToEntityMarshaller}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpRequest}
 import akka.http.scaladsl.unmarshalling.FromRequestUnmarshaller
 import akka.stream.Materializer
-import org.json4s.DefaultFormats
+import org.json4s.{DefaultFormats, Formats}
 import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization.read
 
@@ -13,7 +13,8 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
 abstract class MarshallEntity[A <: AnyRef](implicit manifect: Manifest[A]) {
 
-  implicit val formats: DefaultFormats = DefaultFormats
+  implicit val formats: Formats =
+    DefaultFormats + OffsetDateTimeSerializer
 
   implicit val marshaller: ToEntityMarshaller[A] = {
     Marshaller.withFixedContentType(ContentTypes.`application/json`) { obj =>
