@@ -16,7 +16,7 @@ object PostgresSetup extends App {
 
   implicit val mat: Materializer = Materializer(system)
 
-  DatabaseTablesEntities.entitiesSchemas.foreach {
+  DatabaseTablesEntities.tableDefinisions.foreach {
     db.run(
       _
     ).onComplete(_ => system.terminate())

@@ -3,18 +3,9 @@ package processingFlows.flows
 import akka.stream.alpakka.amqp.{AmqpConnectionProvider, WriteMessage}
 import akka.util.ByteString
 import common.TwitchMessage
-import customCommands.commands.{
-  DeleteMessageCommand,
-  TimeoutCommand,
-  WithTwitchOutput
-}
+import customCommands.commands.{DeleteMessageCommand, WithTwitchOutput}
 import db.DataBaseIO
-import model.{
-  FilteredTerm,
-  FilteredTermTable,
-  WhiteListedDomain,
-  WhiteListedDomainTable
-}
+import model.{FilteredTerm, FilteredTermTable}
 import processingFlows.common.ProcessingFlow
 import slick.jdbc.PostgresProfile.api._
 

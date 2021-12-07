@@ -4,7 +4,6 @@ case class TestCommand(
     dummyParameter1: String,
     dummyParameter2: String
 ) extends WithTwitchOutput {
-  override val params: List[String] = List(dummyParameter1, dummyParameter2)
 
   override def outputCommands: List[String] = {
     List(s"PRIVMSG #sadbruh1 : $dummyParameter1")

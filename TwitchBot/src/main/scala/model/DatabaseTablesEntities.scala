@@ -6,9 +6,10 @@ import slick.jdbc.PostgresProfile.api._
 
 object DatabaseTablesEntities {
 
-  def entitiesSchemas = List(
+  def tableDefinisions = List(
     DBIO.seq(lifted.TableQuery[WhiteListedDomainTable].schema.create),
     DBIO.seq(lifted.TableQuery[FilteredTermTable].schema.create),
-    DBIO.seq(lifted.TableQuery[RecurringNotificationTable].schema.create)
+    DBIO.seq(lifted.TableQuery[RecurringNotificationTable].schema.create),
+    DBIO.seq(lifted.TableQuery[UserCommandTable].schema.create)
   )
 }

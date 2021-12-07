@@ -7,6 +7,8 @@ import model.{
   FilteredTermTable,
   RecurringNotification,
   RecurringNotificationTable,
+  UserCommand,
+  UserCommandTable,
   WhiteListedDomain,
   WhiteListedDomainTable
 }
@@ -31,15 +33,16 @@ object DatabaseTestReader extends App {
 //    )
 //  )
   //put
-  def create(k: FilteredTerm) = DBIO.seq(
-    lifted.TableQuery[FilteredTermTable] ++= Seq(
+  def create(k: UserCommand) = DBIO.seq(
+    lifted.TableQuery[UserCommandTable] ++= Seq(
       k
     )
   )
 
-  val k = FilteredTerm(
-    2,
-    "BatChest"
+  val k = UserCommand(
+    1,
+    "subtime",
+    "Have been subscribed to $1 for $2 months in a row. What a $3"
   )
 //
 //  def delete(k: WhiteListedDomain) = DBIO.seq(

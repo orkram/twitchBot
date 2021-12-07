@@ -43,6 +43,7 @@ case class TwitchWebSocketConnection(
       TextMessage("PASS " + config.pass),
       TextMessage("NICK " + config.nickname),
       TextMessage("CAP REQ :twitch.tv/tags"),
+      TextMessage("CAP REQ :twitch.tv/commands"),
       TextMessage("JOIN #" + config.nickname)
     )
   )

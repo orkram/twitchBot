@@ -5,7 +5,8 @@ import processingFlows.common.ProcessingFlow
 import processingFlows.flows.{
   CustomCommandFlow,
   FilteringFlow,
-  UrlFilteringFlow
+  UrlFilteringFlow,
+  UserCommandFlow
 }
 
 object ProcessingFlows {
@@ -14,6 +15,7 @@ object ProcessingFlows {
       connectionProvider: AmqpConnectionProvider
   ): List[ProcessingFlow[_]] = {
     List(
+      UserCommandFlow(connectionProvider),
       CustomCommandFlow(connectionProvider),
       UrlFilteringFlow(connectionProvider),
       FilteringFlow(connectionProvider)
