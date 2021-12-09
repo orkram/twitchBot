@@ -1,5 +1,9 @@
 package customCommands.commands
 
+import common.TwitchMessage
+
+import scala.concurrent.Future
+
 case class TestCommand(
     dummyParameter1: String,
     dummyParameter2: String
@@ -13,10 +17,14 @@ case class TestCommand(
 object TestCommand extends CustomCommand[TestCommand] {
   override val signature = "test"
 
-  override def apply(parameters: List[String]): Option[TestCommand] = {
+  override def apply(
+      tm: TwitchMessage,
+      parameters: List[String]
+  ): Future[Option[TestCommand]] = {
     parameters match {
-      case List(par1, par2, _*) => Some(TestCommand(par1, par2))
-      case _                    => None //either?
+      case List(par1, par2, _*) =>
+        Future.successful(Some(TestCommand(par1, par2)))
+      case _ => Future.successful(None)
     }
 
   }
