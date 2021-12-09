@@ -55,13 +55,3 @@ class UserCommandTable(tag: Tag)
   val signature: Rep[String] = column[String]("signature")
   val output: Rep[String] = column[String]("output")
 }
-
-object Main extends App {
-
-  val commandTemplate =
-    "Have been subscribed to $1 for $2 months in a row. What a $3"
-
-  val params: List[String] = List("sadbruh1", "2", "champ")
-  println(UserCommand(1, "1", commandTemplate).getOutput(params))
-
-}

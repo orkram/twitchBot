@@ -58,7 +58,7 @@ object OnTickFlow extends App {
     }
     .mapAsync(1)(notification =>
       DataBaseIO
-        .updateEntity[RecurringNotificationTable, RecurringNotification](
+        .updateEntity[RecurringNotification, RecurringNotificationTable](
           TableQuery[RecurringNotificationTable]
             .filter(x => x.id === notification.id)
             .update(notification.copy(lastExecuted = OffsetDateTime.now))

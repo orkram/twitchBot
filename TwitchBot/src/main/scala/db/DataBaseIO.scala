@@ -22,7 +22,7 @@ object DataBaseIO extends DbConnection {
   ) // todo session still probably wont terminate properly, move actor system somewhere else?
 
   def readEntities[E, T <: Table[E]](
-      tableQuery: TableQuery[T]
+      tableQuery: Query[T, E, Seq]
   ): Future[Seq[E]] =
     Slick
       .source(tableQuery.result)
@@ -39,7 +39,7 @@ object DataBaseIO extends DbConnection {
     ).map(_ => a)
   }
 
-  def updateEntity[T <: AbstractTable[A], A](
+  def updateEntity[A, T <: AbstractTable[A]](
       tableQuery: DBIOAction[Int, NoStream, Effect.Write]
   ): Future[Int] = {
     db.run(

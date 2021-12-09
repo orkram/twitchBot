@@ -12,6 +12,10 @@ case class ConfigurationRoutes()(implicit ec: ExecutionContext) {
     path("whiteList")(WhiteListEndpoints().ordersRoute) ~
       path("recurringNotification")(
         RecurringNotificationEndpoints().ordersRoute
+      ) ~ path("startBet")(
+        BettingEndpoints().startBetRoute
+      ) ~ path("finishBet")(
+        BettingEndpoints().finishBetRoute
       )
 
 }

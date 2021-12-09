@@ -5,6 +5,7 @@ import processingFlows.common.ProcessingFlow
 import processingFlows.flows.{
   CustomCommandFlow,
   FilteringFlow,
+  FirstMessageFlow,
   UrlFilteringFlow,
   UserCommandFlow
 }
@@ -18,7 +19,8 @@ object ProcessingFlows {
       UserCommandFlow(connectionProvider),
       CustomCommandFlow(connectionProvider),
       UrlFilteringFlow(connectionProvider),
-      FilteringFlow(connectionProvider)
+      FilteringFlow(connectionProvider),
+      FirstMessageFlow(connectionProvider)
     )
   }
 }

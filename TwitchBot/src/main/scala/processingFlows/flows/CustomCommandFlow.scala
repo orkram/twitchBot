@@ -30,12 +30,12 @@ case class CustomCommandFlow(connectionProvider: AmqpConnectionProvider)
     val message = m.message.get
     val command :: params = message.split(' ').toList
 
-    Future.successful(
-      CustomCommands
-        .knownCommands()
-        .find(_.signature == command.stripPrefix("!"))
-        .flatMap(x => x.apply(params))
-    )
+    CustomCommands
+      .knownCommands()
+      .find(_.signature == command.stripPrefix("!"))
+      .map(x => x.apply(m, params))
+      .getOrElse(Future.successful(None))
+
   }
 
   override def fromMessageToCommands(
