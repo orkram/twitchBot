@@ -3,7 +3,7 @@ package processingFlows.flows
 import akka.stream.alpakka.amqp.{AmqpConnectionProvider, WriteMessage}
 import akka.util.ByteString
 import common.TwitchMessage
-import customCommands.commands.{DeleteMessageCommand, WithTwitchOutput}
+import customCommands.commands.WithTwitchOutput
 import db.DataBaseIO
 import model.{Bettor, BettorTable}
 import processingFlows.common.ProcessingFlow

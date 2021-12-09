@@ -14,10 +14,13 @@ case class Bettor(
     this.copy(unsafePool = bet, pool = pool - bet, outcome = outcome)
   }
 
+  def validateBet(bet: Long): Boolean =
+    bet <= pool && outcome == "u" // no active bets ongoing
+
   def finishBet(ratio: Double, result: String): Bettor = {
     if (result == outcome) {
       this.copy(
-        pool = (unsafePool * ratio).toLong,
+        pool = pool + (unsafePool * ratio).toLong,
         unsafePool = 0,
         outcome = "u"
       )

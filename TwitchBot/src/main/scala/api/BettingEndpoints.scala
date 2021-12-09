@@ -15,7 +15,7 @@ case class BettingEndpoints() {
   def startBet: Future[Option[BetSession]] = {
     val anyOngoingBets = DataBaseIO
       .readEntities[BetSession, BetSessionTable](
-        TableQuery[BetSessionTable]
+        TableQuery[BetSessionTable].filter(b => b.state === "ongoing")
       )
       .map(_.toList)
 
