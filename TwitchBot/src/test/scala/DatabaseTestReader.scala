@@ -3,6 +3,8 @@ import akka.stream.Materializer
 import akka.stream.alpakka.slick.scaladsl.{Slick, SlickSession}
 import akka.stream.scaladsl.Sink
 import model.{
+  Bettor,
+  BettorTable,
   FilteredTerm,
   FilteredTermTable,
   RecurringNotification,
@@ -39,17 +41,22 @@ object DatabaseTestReader extends App {
     )
   )
 
-  val k = UserCommand(
+  val k = Bettor(
     1,
-    "subtime",
-    "Have been subscribed to $1 for $2 months in a row. What a $3"
+    "dem_boy",
+    1000,
+    0,
+    "u"
   )
-//
-//  def delete(k: WhiteListedDomain) = DBIO.seq(
-//    lifted.TableQuery[WhiteListedDomainTable].delete
-//  )
-//
-  db.run(create(k))
+
+  def delete(k: Bettor) = DBIO.seq(
+    lifted
+      .TableQuery[BettorTable]
+      .filter(x => x.nickname === "aristol1738")
+      .delete
+  )
+
+  db.run(delete(k))
 
   val query = Slick
     .source(TableQuery[FilteredTermTable].result)

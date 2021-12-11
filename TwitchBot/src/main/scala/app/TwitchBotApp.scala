@@ -1,5 +1,6 @@
+package app
+
 import akka.actor.ActorSystem
-import akka.actor.Status.Success
 import akka.stream.Materializer
 import akka.stream.alpakka.amqp.AmqpUriConnectionProvider
 import akka.stream.scaladsl.Sink
@@ -9,6 +10,7 @@ import common.ConfigLoader
 import common.MessageLogger.logMessage
 import configs.TwitchWsConfig
 import processingFlows.ProcessingFlows
+import processingFlows.common.OnTickFlow
 import twitchWebsocket.TwitchWebSocketConnection
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -49,7 +51,8 @@ object TwitchBotApp extends App {
 
       }
 
+  val tickFlow = OnTickFlow().source.run()
+
   val httpRoutesBinding = TwitchBotApi.runApi
 
-  //TODO: restart logic, and error handling
 }

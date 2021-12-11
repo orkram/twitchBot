@@ -1,3 +1,5 @@
+package app
+
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.alpakka.slick.scaladsl.SlickSession

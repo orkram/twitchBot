@@ -9,7 +9,21 @@ case class BetSession(
     losePool: Long
 ) extends Entity {
 
-  def ratio: Double = 1 + winPool / losePool
+  def ratio(outcome: String): Double = {
+    if (outcome == "l") {
+      1 + (winPool.toDouble / losePool.toDouble)
+    } else {
+      1 + (losePool.toDouble / winPool.toDouble)
+    }
+  }
+
+  def ongoing: Boolean = state == "ongoing"
+
+  def withUpdatedPool(bet: Long, outCome: String): BetSession = {
+    if (outCome == "l") { this.copy(losePool = losePool + bet) }
+    else if (outCome == "w") { this.copy(winPool = winPool + bet) }
+    else this
+  }
 }
 
 object BetSession extends MarshallEntity[BetSession] {

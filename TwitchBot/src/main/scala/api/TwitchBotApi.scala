@@ -4,11 +4,12 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
+import akka.stream.Materializer
 import api.config.ConfigurationEndpointsConfig
 import common.ConfigLoader
 import common.MessageLogger.logMessage
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 object TwitchBotApi {
 
@@ -18,15 +19,17 @@ object TwitchBotApi {
   implicit val executionContext: ExecutionContextExecutor =
     system.executionContext
 
+  implicit val mat: Materializer = Materializer(system)
+
   val httpConfig: ConfigurationEndpointsConfig =
     ConfigLoader.loadConfig(classOf[ConfigurationEndpointsConfig])
 
   val routes: Route = ConfigurationRoutes().baseRoute
 
-  val runApi =
+  val runApi: Future[Http.ServerBinding] =
     Http()
       .newServerAt(httpConfig.uri, httpConfig.port)
-      .bind(ConfigurationRoutes().baseRoute)
+      .bind(routes)
       .map { x =>
         logMessage(s"Server is up at ${httpConfig.uri}:${httpConfig.port}")
         x

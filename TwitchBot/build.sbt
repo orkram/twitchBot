@@ -6,7 +6,6 @@ scalaVersion := "2.13.1"
 
 val AkkaVersion = "2.6.14"
 val AkkaHttpVersion = "10.2.7"
-
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
@@ -19,3 +18,15 @@ libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "42.2.5",
   "org.scala-lang" % "scala-reflect" % scalaVersion.value
 )
+
+Compile / mainClass := Some("app.TwitchBotApp")
+
+lazy val root = (project in file("."))
+  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(UniversalPlugin)
+  .enablePlugins(DockerPlugin)
+  .enablePlugins(DockerSpotifyClientPlugin)
+  .settings(
+    name := "bot-processor",
+    dockerExposedPorts := Seq(8080, 5432, 5672)
+  )
