@@ -21,12 +21,7 @@
   .col-4  { width: 33.33%; }
   .col-5  { width: 41.66666667%; }
   .col-6  { width: 50%; }
-  .col-7  { width: 58.33333333%; }
-  .col-8  { width: 66.66666667%; }
-  .col-9  { width: 75%; }
-  .col-10 { width: 83.33333333%; }
-  .col-11 { width: 91.66666667%; }
-  .col-12 { width: 100%; }
+
 }
 
 .grid-item {
@@ -57,7 +52,7 @@
 
 // use anywhere you want to push content to the end of the flex container
  .flex-spacer {
-   flex-grow: 1;
+   flex-grow: .5;
  }
 
 .meta {
@@ -74,3 +69,7 @@
  }
 }
 }
+
+.wider-input-field {
+  flex-grow: 1;
+  width: 90%;}

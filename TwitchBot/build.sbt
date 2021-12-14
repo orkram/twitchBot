@@ -28,5 +28,5 @@ lazy val root = (project in file("."))
   .enablePlugins(DockerSpotifyClientPlugin)
   .settings(
     name := "bot-processor",
-    dockerExposedPorts := Seq(8080, 5432, 5672)
+    dockerExposedPorts := Seq(8080)
   )

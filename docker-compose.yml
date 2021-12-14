@@ -3,6 +3,8 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'twitchbot-rabbitmq'
+    hostname: 'rabbitmq'
+    restart: always
     ports:
         - 5672:5672
         - 15672:15672
@@ -10,10 +12,11 @@ services:
         - ~/.docker-conf/rabbitmq/data/:/home/arkansweet/rabbitmq/lib
         - ~/.docker-conf/rabbitmq/log/:/home/arkansweet/rabbitmq/log
     networks:
-        - rabbitmq_go_net
+        - internal_network
   postgres:
     image: postgres:10.5
     container_name: 'twitchbot-postgres'
+    hostname: 'postgres'
     restart: always
     environment:
         - POSTGRES_USER=postgres
@@ -28,9 +31,21 @@ services:
         - ./postgres-data:/var/lib/postgresql/data
         # copy the sql script to create tables
         - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-
+    networks:
+        - internal_network
+  #core:
+    #image: twitchbot:0.1
+    #ports:
+        #- '8080:8080'
+        #- '443:443'
+    #restart: always
+    #networks:
+        #- internal_network
 networks:
-  rabbitmq_go_net:
-    driver: bridge
+  internal_network:
+    ipam:
+        driver: default
+        config:
+            - subnet: "172.24.24.0/24"
     
     

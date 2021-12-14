@@ -1,1 +1,14 @@
+.main-view{
+  display: flex;
+  flex-wrap: nowrap;
+}
 
+
+.config-view{
+  max-width: 75%;
+}
+
+.chat-view{
+  max-width: 25%;
+  flex-grow: 1;
+}
