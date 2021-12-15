@@ -157,7 +157,15 @@ case class BettingEndpoints() {
           )
       }
     }
+  }
 
+  def getCurrentBet: Future[Option[BetSession]] = {
+    val anyOngoingBetSessions = DataBaseIO
+      .readEntities[BetSession, BetSessionTable](
+        TableQuery[BetSessionTable].filter(bet => bet.state === "ongoing")
+      )
+      .map(_.toList)
+    anyOngoingBetSessions.map(_.headOption)
   }
 
   case class Outcome(
@@ -181,4 +189,11 @@ case class BettingEndpoints() {
       }
     }
   }
+
+  def getBetStateRoute: Route =
+    get {
+      complete {
+        getCurrentBet
+      }
+    }
 }
