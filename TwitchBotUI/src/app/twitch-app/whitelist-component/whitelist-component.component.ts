@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {SelectedUsersService} from "../../services/SelectedUserService";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {WhiteListService} from "../../services/WhiteListService";
 import {WhiteList} from "../../model/WhiteList";
+import {SelectedWhitelistService} from "../../services/SelectedWhitelistService";
 
 @Component({
   selector: 'app-whitelist-component',
@@ -11,17 +11,17 @@ import {WhiteList} from "../../model/WhiteList";
 })
 export class WhitelistComponentComponent implements OnInit, AfterViewInit{
 
-  constructor( private whitelistedTermService: WhiteListService, private selectedFiltersService: SelectedUsersService) { }
+  constructor( private whitelistedTermService: WhiteListService, private selectedWhitelistService: SelectedWhitelistService) { }
 
   whitelistedTerms: WhiteList[] = []
-  selectedFilters: {[key: string]: boolean} = {};
+  selectedWhitelists: {[key: string]: boolean} = {};
 
   whitelistForm: FormGroup = new FormGroup({
     whitelist: new FormControl('', Validators.compose([Validators.required])),
   });
 
   getSelectedFilters(): Array<string>{
-    return Object.keys(this.selectedFilters).filter((name: string) => this.selectedFilters[name]);
+    return Object.keys(this.selectedWhitelists).filter((name: string) => this.selectedWhitelists[name]);
   }
 
   refreshWhitelists() {
@@ -29,7 +29,7 @@ export class WhitelistComponentComponent implements OnInit, AfterViewInit{
       (terms: WhiteList[]) =>{
         console.log(terms)
         this.whitelistedTerms = terms.map((x: WhiteList) => x)
-        this.selectedFilters = {}
+        this.selectedWhitelists = {}
       }
     )
 
@@ -59,8 +59,8 @@ export class WhitelistComponentComponent implements OnInit, AfterViewInit{
   }
 
   removeFilters(): void {
-    this.selectedFiltersService
-      .getSelectedUsers()
+    this.selectedWhitelistService
+      .getSelectedWhitelists()
       .map( (filter: any) => {
           console.log(filter)
           let whitelist = this.whitelistedTerms.find((t) => t.allowedDomain == filter)
@@ -78,13 +78,13 @@ export class WhitelistComponentComponent implements OnInit, AfterViewInit{
   }
 
   unselect(): void{
-    this.selectedFiltersService.clear();
-    this.selectedFilters = {};
+    this.selectedWhitelistService.clear();
+    this.selectedWhitelists = {};
   }
 
   onSelect(selected: any, whitelist: any): void{
-    this.selectedFilters[whitelist.allowedDomain] = selected;
-    this.selectedFiltersService.setSelectedUsers(this.getSelectedFilters()) ;
+    this.selectedWhitelists[whitelist.allowedDomain] = selected;
+    this.selectedWhitelistService.setSelectedWhitelists(this.getSelectedFilters()) ;
     console.log(this.getSelectedFilters())
   }
 }

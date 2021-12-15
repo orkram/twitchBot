@@ -1,0 +1,66 @@
+@media all and (min-width: 60em) {
+  .col-1  { width: 12%; }
+  .col-2  { width: 16.66666667%; }
+  .col-3  { width: 25%; }
+  .col-4  { width: 33.33%; }
+  .col-5  { width: 41.66666667%; }
+  .col-6  { width: 50%; }
+
+}
+
+.flex-spacer1 {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.grid-item-content {
+  display: flex;
+  flex-direction: column;
+  & .heading1 {
+    margin: 2rem 0 3rem;
+    font-size: 2.2rem;
+  }
+
+  & .heading {
+    margin: 2rem 0 3rem;
+    font-size: 3.2rem;
+  }
+}
+
+.button-column{
+  display: flex;
+  flex-direction: column;
+
+
+}
+
+.win-button{
+  background-color: #F66257
+}
+.lose-button{
+  background-color:#4caf50
+}
+.meta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap:wrap;
+  & li {
+    margin-right: 1.2rem;
+    font-size: 1.4rem;
+    letter-spacing: 0.05rem;
+    color: #999;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+
+.wider-input-field {
+  flex-grow: 1;
+  width: 90%;
+}
+
+mat-selection-list {
+  max-height: 250px;
+  overflow: auto;
+}

@@ -1,4 +1,4 @@
-<h1 class="heading">Chat filters </h1>
+<h1 class="heading">Allowed to share domains </h1>
 <mat-selection-list #allowedDomains>
   <mat-list-option *ngFor="let term of whitelistedTerms" (selectedChange) = "onSelect($event, term)" >
     {{term.allowedDomain}}

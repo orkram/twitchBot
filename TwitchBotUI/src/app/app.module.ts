@@ -13,14 +13,17 @@ import {HttpClientModule} from "@angular/common/http";
 import {BettingService} from "./services/BettingService";
 import {CustomCommandService} from "./services/CustomCommandService";
 import {FilteredTermService} from "./services/FilteredTermService";
-import {SelectedUsersService} from "./services/SelectedUserService";
+import {SelectedTermsService} from "./services/SelectedUserService";
 import {WhiteListService} from "./services/WhiteListService";
 import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { FilterComponentComponent } from './twitch-app/filter-component/filter-component.component';
-import { WhitelistComponentComponent } from './twitch-app/whitelist-component/whitelist-component.component';
+import {FilterComponentComponent} from './twitch-app/filter-component/filter-component.component';
+import {WhitelistComponentComponent} from './twitch-app/whitelist-component/whitelist-component.component';
+import {BettingComponentComponent} from './twitch-app/betting-component/betting-component.component';
+import {NotificationsComponentComponent} from './twitch-app/notifications-component/notifications-component.component';
+import {SelectedWhitelistService} from "./services/SelectedWhitelistService";
 
 @NgModule({
   declarations: [
@@ -28,7 +31,9 @@ import { WhitelistComponentComponent } from './twitch-app/whitelist-component/wh
     TwitchChatComponent,
     TwitchAppComponent,
     FilterComponentComponent,
-    WhitelistComponentComponent
+    WhitelistComponentComponent,
+    BettingComponentComponent,
+    NotificationsComponentComponent
   ],
   imports: [
     BrowserModule,
@@ -50,8 +55,9 @@ import { WhitelistComponentComponent } from './twitch-app/whitelist-component/wh
     BettingService,
     CustomCommandService,
     FilteredTermService,
-    SelectedUsersService,
-    WhiteListService
+    WhiteListService,
+    SelectedWhitelistService,
+    SelectedTermsService
   ],
 })
 export class AppModule { }

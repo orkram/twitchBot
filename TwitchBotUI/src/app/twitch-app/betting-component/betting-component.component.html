@@ -1,0 +1,25 @@
+<div class="grid-item-content">
+<h1 class="heading">Bets controls </h1>
+
+<div>
+<h5 class="heading1"> {{!betOngoing? "No ongoing bets": "Bet is open, chose outcome to finish"}}  </h5>
+</div>
+  <div class="flex-spacer1"></div>
+
+  <div class="meta">
+<p>
+  <button mat-raised-button color="primary" class="remove-button"
+          disabled="{{betOngoing}}" (click)="startBet()"> {{'Start bet!'}}</button>
+</p>
+<div class="flex-spacer1"></div>
+    <div class="button-column">
+<p>
+  <button mat-raised-button color="#F44336" class="win-button"  disabled="{{!betOngoing}}" (click)="finishBet('w')"> {{'Finish bet(win)'}}</button>
+</p>
+    <p>
+      <button mat-raised-button color="red" class="lose-button"  disabled="{{!betOngoing}}" (click)="finishBet('l')"> {{'Finish bet(lose)'}}</button>
+    </p>
+  </div>
+  </div>
+</div>
+

@@ -1,15 +1,15 @@
-export class SelectedUsersService{
-  private selectedUsers: Array<string> = [];
+export class SelectedTermsService{
+  private selectedTerms: Array<string> = [];
 
-  setSelectedUsers(users: Array<string>): void{
-    this.selectedUsers = users;
+  setSelectedTerms(users: Array<string>): void{
+    this.selectedTerms = users;
   }
 
-  getSelectedUsers(): Array<string>{
-    return this.selectedUsers;
+  getSelectedTerms(): Array<string>{
+    return this.selectedTerms;
   }
 
   clear(): void{
-    this.selectedUsers = [];
+    this.selectedTerms = [];
   }
 }

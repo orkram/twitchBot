@@ -5,10 +5,15 @@
 
 
 .config-view{
-  max-width: 75%;
 }
 
 .chat-view{
-  max-width: 25%;
+  min-width: 25%;
   flex-grow: 1;
+}
+
+@media screen and (max-width: 1024px) {
+  .twitch-chat-hide {
+    display: none !important;
+  }
 }

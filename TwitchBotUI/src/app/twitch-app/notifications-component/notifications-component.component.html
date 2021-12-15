@@ -1,0 +1,24 @@
+<h1 class="heading">Recurring notifications </h1>
+<mat-selection-list #terms1>
+  <mat-list-option *ngFor="let notification of notifications" (selectedChange) = "onSelect($event, notification)" >
+    {{notification.term}}
+  </mat-list-option>
+</mat-selection-list>
+<div class="flex-spacer"></div>
+<p>
+  Options selected: {{getSelectedNotifications().length}}
+</p>
+
+<p>
+  <button mat-raised-button color="primary" class="remove-button" (click)="removeNotifications()"> {{'Remove selected'}}</button>
+</p>
+<div class="flex-spacer"></div>
+<form #formDirective="ngForm" [formGroup]="notificationForm" (ngSubmit)="submitNotification(formDirective)">
+  <mat-form-field class="wider-input-field" appearance="outline">
+    <mat-label>{{'Define term'}} </mat-label>
+    <input type="text" matInput  formControlName="notification" required>
+  </mat-form-field>
+  <div class="button">
+    <button type="submit" mat-raised-button color="primary" [disabled]="notificationForm.invalid"  >{{'Add'}}</button>
+  </div>
+</form>

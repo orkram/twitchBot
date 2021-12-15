@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {SelectedUsersService} from "../../services/SelectedUserService";
+import {SelectedTermsService} from "../../services/SelectedUserService";
 import {FilteredTermService} from "../../services/FilteredTermService";
 import {FilteredTerm} from "../../model/FilteredTerm";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -11,7 +11,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class FilterComponentComponent implements OnInit, AfterViewInit{
 
-  constructor( private filteredTermService: FilteredTermService, private selectedFiltersService: SelectedUsersService) { }
+  constructor( private filteredTermService: FilteredTermService, private selectedFiltersService: SelectedTermsService) { }
 
   terms: FilteredTerm[] = []
   selectedFilters: {[key: string]: boolean} = {};
@@ -61,7 +61,7 @@ export class FilterComponentComponent implements OnInit, AfterViewInit{
 
   removeFilters(): void {
     this.selectedFiltersService
-      .getSelectedUsers()
+      .getSelectedTerms()
       .map( (filter: any) => {
           console.log(filter)
           let term = this.terms.find((t) => t.term == filter)
@@ -88,7 +88,7 @@ export class FilterComponentComponent implements OnInit, AfterViewInit{
     console.log(term)
 
     this.selectedFilters[term.term] = selected;
-    this.selectedFiltersService.setSelectedUsers(this.getSelectedFilters()) ;
+    this.selectedFiltersService.setSelectedTerms(this.getSelectedFilters()) ;
     console.log(this.getSelectedFilters())
   }
 }

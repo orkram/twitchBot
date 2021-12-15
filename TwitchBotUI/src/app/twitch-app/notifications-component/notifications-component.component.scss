@@ -1,0 +1,23 @@
+@media all and (min-width: 60em) {
+  .col-1  { width: 12%; }
+  .col-2  { width: 16.66666667%; }
+  .col-3  { width: 25%; }
+  .col-4  { width: 33.33%; }
+  .col-5  { width: 41.66666667%; }
+  .col-6  { width: 50%; }
+
+}
+
+.flex-spacer {
+  flex-grow: .5;
+}
+
+.wider-input-field {
+  flex-grow: 1;
+  width: 90%;
+}
+
+mat-selection-list {
+  max-height: 250px;
+  overflow: auto;
+}

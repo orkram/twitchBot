@@ -14,12 +14,14 @@ export class BettingService {
   }
 
   getOngoingBet(): Observable<any> {
-    return this.http.get(`http://localhost:8080/getBets`)
+    return this.http.get(`http://localhost:8080/betState`)
   };
 
 
-  finshBet(id: string, term: String): Observable<any> {
-    return this.http.post(`http://localhost:8080/finishBet`, {});
+  finishBet( outcome: String): Observable<any> {
+    return this.http.post(`http://localhost:8080/finishBet`, {
+      outcome: outcome
+    });
   }
 
 
