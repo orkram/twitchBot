@@ -19,12 +19,16 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FilterComponentComponent } from './twitch-app/filter-component/filter-component.component';
+import { WhitelistComponentComponent } from './twitch-app/whitelist-component/whitelist-component.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TwitchChatComponent,
-    TwitchAppComponent
+    TwitchAppComponent,
+    FilterComponentComponent,
+    WhitelistComponentComponent
   ],
   imports: [
     BrowserModule,

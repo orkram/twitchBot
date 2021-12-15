@@ -20,6 +20,8 @@ case class ConfigurationRoutes()(implicit
         BettingEndpoints().startBetRoute
       ) ~ path("finishBet")(
         BettingEndpoints().finishBetRoute
+      ) ~ path("filteredTerms")(
+        FilteredTermsEndpoints().termsRoute
       )
 
 }

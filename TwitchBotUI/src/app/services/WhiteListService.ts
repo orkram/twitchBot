@@ -26,7 +26,7 @@ export class WhiteListService {
   }
 
   addTerm(term: String): Observable<any> {
-    return this.http.put(`http://localhost:8080/whiteList`, {
+    return this.http.post(`http://localhost:8080/whiteList`, {
       id: 1,
       allowedDomain: term
     });

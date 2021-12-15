@@ -5,30 +5,15 @@
     <div class="col col-4">
       <div class="grid-item">
         <div class="grid-item-content">
-          <h1 class="heading">Chat filters </h1>
-          <mat-selection-list #terms1>
-            <mat-list-option (selectedChange)= "onSelect($event)" *ngFor="let term of terms">
-              {{term.term}}
-            </mat-list-option>
-          </mat-selection-list>
-          <div class="flex-spacer"></div>
-          <p>
-            Options selected: {{getSelectedFilters().length}}
-          </p>
+          <app-filter-component></app-filter-component>
+        </div>
+      </div>
+    </div>
 
-            <p>
-              <button mat-raised-button color="primary" class="remove-button" (click)="removeFilters()"> {{'Remove selected'}}</button>
-            </p>
-          <div class="flex-spacer"></div>
-          <form [formGroup]="filterForm" (ngSubmit)="submitTerm()">
-            <mat-form-field class="wider-input-field" appearance="outline">
-              <mat-label>{{'Define term'}} </mat-label>
-              <input type="text" matInput  formControlName="term" required>
-            </mat-form-field>
-          <div class="button">
-            <button type="submit" mat-raised-button color="primary" [disabled]="filterForm.invalid"  >{{'Add'}}</button>
-          </div>
-          </form>
+    <div class="col col-4">
+      <div class="grid-item">
+        <div class="grid-item-content">
+          <app-whitelist-component></app-whitelist-component>
         </div>
       </div>
     </div>
@@ -41,14 +26,7 @@
             <li><a href="#" title="">Category</a></li>
             <li>July 12, 2015</li>
           </ul>
-          <h1 class="heading">Heading Longer - Lorem ipsum dolor sit amet. </h1>
           <div class="flex-spacer"></div>
-          <ul class="meta meta-bottom">
-            <li aria-label="Liked"><i class="icon ion-ios-chatbubble" aria-hidden="true"></i> 23</li>
-            <li aria-label="Shared"><i class="icon ion-android-share-alt" aria-hidden="true"></i> 145</li>
-            <li class="flex-spacer"></li>
-            <li><a href="#" title="">Read more <i class="icon ion-ios-arrow-forward" aria-hidden="true"></i></a></li>
-          </ul>
         </div>
       </div>
     </div>
@@ -61,14 +39,7 @@
             <li><a href="#" title="">Category</a></li>
             <li>July 12, 2015</li>
           </ul>
-          <h1 class="heading">Heading</h1>
           <div class="flex-spacer"></div>
-          <ul class="meta meta-bottom">
-            <li aria-label="Liked"><i class="icon ion-ios-chatbubble" aria-hidden="true"></i> 23</li>
-            <li aria-label="Shared"><i class="icon ion-android-share-alt" aria-hidden="true"></i> 145</li>
-            <li class="flex-spacer"></li>
-            <li><a href="#" title="">Read more <i class="icon ion-ios-arrow-forward" aria-hidden="true"></i></a></li>
-          </ul>
         </div>
       </div>
     </div>
@@ -81,34 +52,7 @@
             <li><a href="#" title="">Category</a></li>
             <li>July 12, 2015</li>
           </ul>
-          <h1 class="heading">Heading - Lorem ipsum dolor sit amet. </h1>
           <div class="flex-spacer"></div>
-          <ul class="meta meta-bottom">
-            <li aria-label="Liked"><i class="icon ion-ios-chatbubble" aria-hidden="true"></i> 23</li>
-            <li aria-label="Shared"><i class="icon ion-android-share-alt" aria-hidden="true"></i> 145</li>
-            <li class="flex-spacer"></li>
-            <li><a href="#" title="">Read more <i class="icon ion-ios-arrow-forward" aria-hidden="true"></i></a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="col col-4">
-      <div class="grid-item">
-        <img src="https://unsplash.it/640/360" alt="">
-        <div class="grid-item-content">
-          <ul class="meta">
-            <li><a href="#" title="">Category</a></li>
-            <li>July 12, 2015</li>
-          </ul>
-          <h1 class="heading">Heading Longer - Lorem ipsum dolor sit amet. Etiam fermentum turpis nunc, eget interdum ipsum. </h1>
-          <div class="flex-spacer"></div>
-          <ul class="meta meta-bottom">
-            <li aria-label="Liked"><i class="icon ion-ios-chatbubble" aria-hidden="true"></i> 23</li>
-            <li aria-label="Shared"><i class="icon ion-android-share-alt" aria-hidden="true"></i> 145</li>
-            <li class="flex-spacer"></li>
-            <li><a href="#" title="">Read more <i class="icon ion-ios-arrow-forward" aria-hidden="true"></i></a></li>
-          </ul>
         </div>
       </div>
     </div>
