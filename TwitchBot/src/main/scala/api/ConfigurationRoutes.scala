@@ -24,6 +24,8 @@ case class ConfigurationRoutes()(implicit
         FilteredTermsEndpoints().termsRoute
       ) ~ path("betState")(
         BettingEndpoints().getBetStateRoute
+      ) ~ path("customCommand")(
+        CustomCommandEndpoints().commandsRoute
       )
 
 }

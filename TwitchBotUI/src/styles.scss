@@ -11,4 +11,8 @@ a { text-decoration: none; }
 body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   background: #e6e6e6;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  overflow-y: hidden;
 }

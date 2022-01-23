@@ -1,0 +1,26 @@
+<h1 class="heading">Custom Command </h1>
+<mat-selection-list #terms1>
+  <mat-list-option *ngFor="let notif of userCommands" (selectedChange) = "onSelect($event, notif)" >
+    {{notif.signature}} -> {{notif.output}}
+  </mat-list-option>
+</mat-selection-list>
+<div class="flex-spacer"></div>
+
+<p>
+  <button mat-raised-button color="primary" class="remove-button" (click)="removeCommands()"> {{'Remove selected'}}</button>
+</p>
+<div class="flex-spacer"></div>
+<form #formDirective="ngForm" [formGroup]="commandsFrom" (ngSubmit)="submitCommand(formDirective)">
+  <mat-form-field class="wider-input-field" appearance="outline">
+    <mat-label>{{'Define command'}} </mat-label>
+    <input type="text" matInput  formControlName="signature" required>
+  </mat-form-field>
+  <mat-form-field class="wider-input-field" appearance="outline">
+    <mat-label>{{'Output'}} </mat-label>
+    <input type="text" matInput  formControlName="output" required>
+  </mat-form-field>
+
+  <div class="button">
+    <button type="submit" mat-raised-button color="primary" [disabled]="commandsFrom.invalid"  >{{'Add'}}</button>
+  </div>
+</form>

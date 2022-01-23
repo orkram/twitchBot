@@ -10,7 +10,7 @@ case class RecurringNotification(
     id: Long,
     notification: String,
     frequency: Long = 1.minutes.toSeconds, //in seconds
-    lastExecuted: OffsetDateTime = OffsetDateTime.now()
+    lastExecuted: OffsetDateTime = OffsetDateTime.now().minusSeconds(5)
 ) extends Entity {
 
   def readyToExecute: Boolean = {
@@ -24,7 +24,7 @@ object RecurringNotification extends MarshallEntity[RecurringNotification] {
       id: Long,
       notification: String,
       frequency: Long,
-      lastExecuted: OffsetDateTime
+      lastExecuted: OffsetDateTime = OffsetDateTime.now()
   ): RecurringNotification =
     new RecurringNotification(id, notification, frequency, lastExecuted)
 }

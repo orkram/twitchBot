@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {FilteredTermService} from "../../services/FilteredTermService";
-import {FilteredTerm} from "../../model/FilteredTerm";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {SelectedNotificationService} from "../../services/SelectedNotificationService";
+import {Notification} from "../../model/Notification";
+import {NotificationService} from "../../services/NotificationService";
 
 @Component({
   selector: 'app-notifications-component',
@@ -11,24 +11,26 @@ import {SelectedNotificationService} from "../../services/SelectedNotificationSe
 })
 export class NotificationsComponentComponent implements OnInit, AfterViewInit{
 
-  constructor( private filteredTermService: FilteredTermService, private selectedNotificationsService: SelectedNotificationService) { }
+  constructor( private notificationsService: NotificationService, private selectedNotificationsService: SelectedNotificationService) { }
 
-  notifications: FilteredTerm[] = []
+  notifications: Notification[] = []
   selectedNotifications: {[key: string]: boolean} = {};
 
   notificationForm: FormGroup = new FormGroup({
     notification: new FormControl('', Validators.compose([Validators.required])),
+    frequency: new FormControl('', Validators.compose([Validators.required, Validators.pattern("^[0-9]*$"),]))
   });
+
 
   getSelectedNotifications(): Array<string>{
     return Object.keys(this.selectedNotifications).filter((name: string) => this.selectedNotifications[name]);
   }
 
   refreshNotifications() {
-    this.filteredTermService.getTerms().subscribe(
-      (terms: FilteredTerm[]) =>{
+    this.notificationsService.getNotifications().subscribe(
+      (terms: Notification[]) =>{
         console.log(terms)
-        this.notifications = terms.map((x: FilteredTerm) => x)
+        this.notifications = terms.map((x: Notification) => x)
         this.selectedNotifications = {}
       }
     )
@@ -43,11 +45,11 @@ export class NotificationsComponentComponent implements OnInit, AfterViewInit{
   }
 
   submitNotification(formDirective: any): void{
-    console.log(this.notificationForm.value.term)
-    this.filteredTermService
-      .addTerm(
+    this.notificationsService
+      .addNotification(
         1,
-        this.notificationForm.value.term
+        this.notificationForm.value.notification,
+        this.notificationForm.value.frequency
       )
       .subscribe(
         _ => {},
@@ -64,8 +66,9 @@ export class NotificationsComponentComponent implements OnInit, AfterViewInit{
       .getSelectedNotifications()
       .map( (filter: any) => {
           console.log(filter)
-          let term = this.notifications.find((t) => t.term == filter)
-          this.filteredTermService.removeTerm(term!.id, term!.term).subscribe(
+          let notif = this.notifications.find((t) => t.notification == filter)
+
+          this.notificationsService.removeNotification(notif!.id, notif!.notification, notif!.frequency).subscribe(
             _ => {
             },
             _ => {
@@ -84,10 +87,7 @@ export class NotificationsComponentComponent implements OnInit, AfterViewInit{
   }
 
   onSelect(selected: any, term: any): void{
-    console.log(selected)
-    console.log(term)
-
-    this.selectedNotifications[term.term] = selected;
+    this.selectedNotifications[term.notification] = selected;
     this.selectedNotificationsService.setSelectedNotifications(this.getSelectedNotifications()) ;
   }
 }

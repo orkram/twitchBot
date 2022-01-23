@@ -11,7 +11,6 @@ import {MatTableModule} from "@angular/material/table";
 import {MatListModule} from "@angular/material/list";
 import {HttpClientModule} from "@angular/common/http";
 import {BettingService} from "./services/BettingService";
-import {CustomCommandService} from "./services/CustomCommandService";
 import {FilteredTermService} from "./services/FilteredTermService";
 import {SelectedTermsService} from "./services/SelectedUserService";
 import {WhiteListService} from "./services/WhiteListService";
@@ -24,6 +23,11 @@ import {WhitelistComponentComponent} from './twitch-app/whitelist-component/whit
 import {BettingComponentComponent} from './twitch-app/betting-component/betting-component.component';
 import {NotificationsComponentComponent} from './twitch-app/notifications-component/notifications-component.component';
 import {SelectedWhitelistService} from "./services/SelectedWhitelistService";
+import {NotificationService} from "./services/NotificationService";
+import {SelectedNotificationService} from "./services/SelectedNotificationService";
+import { UsercommandComponent } from './twitch-app/usercommand/usercommand.component';
+import {UserCommandService} from "./services/UserCommandService";
+import {SelectedCommandsService} from "./services/SelectedCommandsService";
 
 @NgModule({
   declarations: [
@@ -33,7 +37,8 @@ import {SelectedWhitelistService} from "./services/SelectedWhitelistService";
     FilterComponentComponent,
     WhitelistComponentComponent,
     BettingComponentComponent,
-    NotificationsComponentComponent
+    NotificationsComponentComponent,
+    UsercommandComponent
   ],
   imports: [
     BrowserModule,
@@ -53,11 +58,14 @@ import {SelectedWhitelistService} from "./services/SelectedWhitelistService";
   bootstrap: [AppComponent],
   providers: [
     BettingService,
-    CustomCommandService,
+    UserCommandService,
     FilteredTermService,
     WhiteListService,
     SelectedWhitelistService,
-    SelectedTermsService
+    SelectedTermsService,
+    NotificationService,
+    SelectedNotificationService,
+    SelectedCommandsService
   ],
 })
 export class AppModule { }

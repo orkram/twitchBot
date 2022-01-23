@@ -1,13 +1,14 @@
 .container {
-  max-width: 1600px;
   padding: 0 15px;
   margin: 0 auto;
   margin-top: 30px;
+  height: 100%;
 }
 .grid {
   display: flex;
   flex-wrap: wrap;
   margin: 0 -15px;
+  height: 90%;
 }
 .col {
   display:flex;
@@ -21,7 +22,6 @@
   .col-4  { width: 33.33%; }
   .col-5  { width: 41.66666667%; }
   .col-6  { width: 50%; }
-
 }
 
 .grid-item {
@@ -51,9 +51,10 @@
 }
 
 // use anywhere you want to push content to the end of the flex container
- .flex-spacer {
-   flex-grow: .5;
- }
+.flex-spacer {
+  flex-grow: 1;
+  margin: 5px;
+}
 
 .meta {
   display: flex;

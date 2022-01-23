@@ -43,6 +43,7 @@ case class UserCommandFlow(connectionProvider: AmqpConnectionProvider)
           .find(c => c.signature == signature.dropWhile(_ == '!'))
           .map(
             _.getOutput(params)
+              .map(s"@${m.nickname.get} " + _)
               .getOrElse(s"/w ${m.nickname.get} Wrong parameters")
           )
       }
