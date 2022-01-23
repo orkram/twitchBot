@@ -7,7 +7,7 @@ import akka.stream.scaladsl.Sink
 import api.TwitchBotApi
 import com.typesafe.config.ConfigFactory
 import common.ConfigLoader
-import common.MessageLogger.logMessage
+import common.MessageLogger.{logMessage, logger}
 import configs.TwitchWsConfig
 import processingFlows.ProcessingFlows
 import processingFlows.common.OnTickFlow
@@ -22,13 +22,15 @@ object TwitchBotApp extends App {
   val twitchWsConfig = ConfigLoader.loadConfig(classOf[TwitchWsConfig])
 
   val connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
-    "amqp://localhost:5672"
+    "amqp://172.24.24.45:5672"
   )
 
   implicit val system: ActorSystem = ActorSystem("mySystem1")
   implicit val mat: Materializer = Materializer(system)
 
   val queues = ProcessingFlows.flows(connectionProvider).map(_.queueName)
+
+  logger.info(connectionProvider.uri)
 
   val (upgradeResponse, promise) =
     TwitchWebSocketConnection(

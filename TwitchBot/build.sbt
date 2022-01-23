@@ -1,6 +1,6 @@
 name := "TwitchBot"
 
-version := "0.1"
+version := "latest"
 
 scalaVersion := "2.13.1"
 

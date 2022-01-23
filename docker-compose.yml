@@ -12,7 +12,9 @@ services:
         - ~/.docker-conf/rabbitmq/data/:/home/arkansweet/rabbitmq/lib
         - ~/.docker-conf/rabbitmq/log/:/home/arkansweet/rabbitmq/log
     networks:
-        - internal_network
+        internal_network:
+            ipv4_address: 172.24.24.45
+        
   postgres:
     image: postgres:10.5
     container_name: 'twitchbot-postgres'
@@ -32,15 +34,27 @@ services:
         # copy the sql script to create tables
         - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     networks:
+        internal_network:
+            ipv4_address: 172.24.24.46
+  core:
+    image: arkadzizaleuski/twitchbot:latest
+    ports:
+        - '8080:8080'
+        - '443:443'
+    restart: always
+    networks:
+       internal_network:
+            ipv4_address: 172.24.24.47
+    depends_on:
+        - rabbitmq
+        - postgres
+  botui:
+    image: arkadzizaleuski/twitchbotui:latest
+    ports:
+        - '8081:80'
+    restart: always
+    networks:
         - internal_network
-  #core:
-    #image: twitchbot:0.1
-    #ports:
-        #- '8080:8080'
-        #- '443:443'
-    #restart: always
-    #networks:
-        #- internal_network
 networks:
   internal_network:
     ipam:

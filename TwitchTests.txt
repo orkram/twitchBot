@@ -37,3 +37,6 @@ PRIVMSG #sadbruh1 delete e3e4da5c-a8a3-425c-b639-e62b40380db9
 
 a8bcd33e-969d-4c13-8c80-9c01523ae7b8PRIVMSG #sadbruh1 :/w dem_boy Have been subscribed to sadbruh1 for 2 months in a row. What a champ
  PRIVMSG #sadbruh1 :a112
+
+ 
+ docker image tag arkadzizaleuski-twitchbot:0.1 arkadzizaleuski/twitchbot:0.1
