@@ -27,7 +27,6 @@ export class FilterComponentComponent implements OnInit, AfterViewInit{
   refreshFilters() {
     this.filteredTermService.getTerms().subscribe(
       (terms: FilteredTerm[]) =>{
-        console.log(terms)
         this.terms = terms.map((x: FilteredTerm) => x)
         this.selectedFilters = {}
       }
@@ -43,7 +42,6 @@ export class FilterComponentComponent implements OnInit, AfterViewInit{
   }
 
   submitTerm(formDirective: any): void{
-    console.log(this.filterForm.value.term)
     this.filteredTermService
       .addTerm(
         1,
@@ -63,7 +61,6 @@ export class FilterComponentComponent implements OnInit, AfterViewInit{
     this.selectedFiltersService
       .getSelectedTerms()
       .map( (filter: any) => {
-          console.log(filter)
           let term = this.terms.find((t) => t.term == filter)
           this.filteredTermService.removeTerm(term!.id, term!.term).subscribe(
             _ => {
@@ -84,11 +81,7 @@ export class FilterComponentComponent implements OnInit, AfterViewInit{
   }
 
   onSelect(selected: any, term: any): void{
-    console.log(selected)
-    console.log(term)
-
     this.selectedFilters[term.term] = selected;
     this.selectedFiltersService.setSelectedTerms(this.getSelectedFilters()) ;
-    console.log(this.getSelectedFilters())
   }
 }

@@ -29,7 +29,6 @@ export class NotificationsComponentComponent implements OnInit, AfterViewInit{
   refreshNotifications() {
     this.notificationsService.getNotifications().subscribe(
       (terms: Notification[]) =>{
-        console.log(terms)
         this.notifications = terms.map((x: Notification) => x)
         this.selectedNotifications = {}
       }
@@ -65,7 +64,6 @@ export class NotificationsComponentComponent implements OnInit, AfterViewInit{
     this.selectedNotificationsService
       .getSelectedNotifications()
       .map( (filter: any) => {
-          console.log(filter)
           let notif = this.notifications.find((t) => t.notification == filter)
 
           this.notificationsService.removeNotification(notif!.id, notif!.notification, notif!.frequency).subscribe(

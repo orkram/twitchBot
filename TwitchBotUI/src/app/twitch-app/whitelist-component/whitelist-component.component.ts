@@ -27,7 +27,6 @@ export class WhitelistComponentComponent implements OnInit, AfterViewInit{
   refreshWhitelists() {
     this.whitelistedTermService.getTerms().subscribe(
       (terms: WhiteList[]) =>{
-        console.log(terms)
         this.whitelistedTerms = terms.map((x: WhiteList) => x)
         this.selectedWhitelists = {}
       }
@@ -43,7 +42,6 @@ export class WhitelistComponentComponent implements OnInit, AfterViewInit{
   }
 
   submitTerm(formDirective: any): void{
-    console.log(this.whitelistForm.value.whitelist)
     this.whitelistedTermService
       .addTerm(
         this.whitelistForm.value.whitelist
@@ -62,7 +60,6 @@ export class WhitelistComponentComponent implements OnInit, AfterViewInit{
     this.selectedWhitelistService
       .getSelectedWhitelists()
       .map( (filter: any) => {
-          console.log(filter)
           let whitelist = this.whitelistedTerms.find((t) => t.allowedDomain == filter)
           this.whitelistedTermService.removeTerm(whitelist!).subscribe(
             _ => {
@@ -85,6 +82,5 @@ export class WhitelistComponentComponent implements OnInit, AfterViewInit{
   onSelect(selected: any, whitelist: any): void{
     this.selectedWhitelists[whitelist.allowedDomain] = selected;
     this.selectedWhitelistService.setSelectedWhitelists(this.getSelectedFilters()) ;
-    console.log(this.getSelectedFilters())
   }
 }

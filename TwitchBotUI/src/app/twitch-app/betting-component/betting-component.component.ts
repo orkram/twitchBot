@@ -50,5 +50,5 @@ export class BettingComponentComponent implements OnInit {
         this.ongoingBet = next
       }
     )
-    console.log(this.ongoingBet)}
+  }
 }

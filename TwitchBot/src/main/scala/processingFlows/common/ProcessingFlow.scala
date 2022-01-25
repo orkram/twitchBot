@@ -58,7 +58,7 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
           logMessage(queueName + ": " + x)
           parseMessage(x)
         case _ =>
-          Future(None) // if this case isn't handled, flow completes
+          Future.successful(None) // if this case isn't handled, flow completes
       }
       .recover { case e =>
         throw e
@@ -74,13 +74,13 @@ trait ProcessingFlow[O <: WithTwitchOutput] {
   def fromMessageToCommands(c: O): List[WriteMessage]
 
   private val restartConfig = RestartSettings(
-    10.seconds,
-    2.minutes,
+    5.seconds,
+    1.minutes,
     0.2
   )
   def getGraph: Source[WriteResult, NotUsed] = {
     RestartSource.onFailuresWithBackoff(restartConfig) { () =>
-      logMessage(s"Restarted flow")
+      logMessage(s"Starting flow " + this.getClass.getSimpleName)
       fromRmq
         .via(process)
     }

@@ -29,7 +29,6 @@ export class UsercommandComponent implements OnInit, AfterViewInit {
   refreshCommands() {
     this.userCommandService.getCommands().subscribe(
       (terms: UserCommand[]) =>{
-        console.log(terms)
         this.userCommands = terms.map((x: UserCommand) => x)
         this.selectedCommands = {}
       }
@@ -65,7 +64,6 @@ export class UsercommandComponent implements OnInit, AfterViewInit {
     this.selectedCommandsService
       .getSelectedCommands()
       .map( (filter: any) => {
-          console.log(filter)
           let cmd = this.userCommands.find((t) => t.signature == filter)
 
           this.userCommandService.removeCommands(cmd!.id, cmd!.signature, cmd!.output).subscribe(
