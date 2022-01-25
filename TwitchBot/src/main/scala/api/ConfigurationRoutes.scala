@@ -11,22 +11,24 @@ import scala.language.postfixOps
 case class ConfigurationRoutes(ampqConfig: TwitchAmpqConfig)(implicit
     ec: ExecutionContext,
     mat: Materializer
-) {
+) extends CORSHandler {
 
   val baseRoute: Route =
-    path("whiteList")(WhiteListEndpoints().ordersRoute) ~
-      path("recurringNotification")(
-        RecurringNotificationEndpoints().ordersRoute
-      ) ~ path("startBet")(
-        BettingEndpoints(ampqConfig).startBetRoute
-      ) ~ path("finishBet")(
-        BettingEndpoints(ampqConfig).finishBetRoute
-      ) ~ path("filteredTerms")(
-        FilteredTermsEndpoints().termsRoute
-      ) ~ path("betState")(
-        BettingEndpoints(ampqConfig).getBetStateRoute
-      ) ~ path("customCommand")(
-        CustomCommandEndpoints().commandsRoute
-      )
+    corsHandler(
+      path("whiteList")(WhiteListEndpoints().ordersRoute) ~
+        path("recurringNotification")(
+          RecurringNotificationEndpoints().ordersRoute
+        ) ~ path("startBet")(
+          BettingEndpoints(ampqConfig).startBetRoute
+        ) ~ path("finishBet")(
+          BettingEndpoints(ampqConfig).finishBetRoute
+        ) ~ path("filteredTerms")(
+          FilteredTermsEndpoints().termsRoute
+        ) ~ path("betState")(
+          BettingEndpoints(ampqConfig).getBetStateRoute
+        ) ~ path("customCommand")(
+          CustomCommandEndpoints().commandsRoute
+        )
+    )
 
 }
