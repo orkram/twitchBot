@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {environment} from "../../environments/environment";
 
 
 @Injectable()
@@ -13,13 +14,13 @@ export class NotificationService {
     notification: string,
     frequency: number
   ): Observable<any> {
-    return this.http.delete(`http://localhost:8080/recurringNotification`, {
+    return this.http.delete(environment.backend + `recurringNotification`, {
       body: {id, notification, frequency}
     });
   }
 
   addNotification(id: number,  notification: String, frequency: number): Observable<any> {
-    return this.http.post(`http://localhost:8080/recurringNotification`, {
+    return this.http.post(environment.backend + `recurringNotification`, {
       id: id,
       notification: notification,
       frequency: frequency
@@ -27,6 +28,6 @@ export class NotificationService {
   }
 
   getNotifications(): Observable<any> {
-    return this.http.get(`http://localhost:8080/recurringNotification`);
+    return this.http.get(environment.backend + `recurringNotification`);
   }
 }
