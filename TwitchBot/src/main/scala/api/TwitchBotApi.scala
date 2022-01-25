@@ -8,6 +8,7 @@ import akka.stream.Materializer
 import api.config.ConfigurationEndpointsConfig
 import common.ConfigLoader
 import common.MessageLogger.logMessage
+import configs.TwitchAmpqConfig
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -24,7 +25,10 @@ object TwitchBotApi {
   val httpConfig: ConfigurationEndpointsConfig =
     ConfigLoader.loadConfig(classOf[ConfigurationEndpointsConfig])
 
-  val routes: Route = ConfigurationRoutes().baseRoute
+  val ampqConfig: TwitchAmpqConfig =
+    ConfigLoader.loadConfig(classOf[TwitchAmpqConfig])
+
+  val routes: Route = ConfigurationRoutes(ampqConfig).baseRoute
 
   val runApi: Future[Http.ServerBinding] =
     Http()

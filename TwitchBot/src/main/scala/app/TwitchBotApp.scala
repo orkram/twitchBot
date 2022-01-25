@@ -8,7 +8,7 @@ import api.TwitchBotApi
 import com.typesafe.config.ConfigFactory
 import common.ConfigLoader
 import common.MessageLogger.{logMessage, logger}
-import configs.TwitchWsConfig
+import configs.{TwitchAmpqConfig, TwitchWsConfig}
 import processingFlows.ProcessingFlows
 import processingFlows.common.OnTickFlow
 import twitchWebsocket.TwitchWebSocketConnection
@@ -21,8 +21,10 @@ object TwitchBotApp extends App {
 
   val twitchWsConfig = ConfigLoader.loadConfig(classOf[TwitchWsConfig])
 
+  val ampqConfig = ConfigLoader.loadConfig(classOf[TwitchAmpqConfig])
+
   val connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
-    "amqp://172.24.24.45:5672"
+    ampqConfig.url
   )
 
   implicit val system: ActorSystem = ActorSystem("mySystem1")
@@ -53,7 +55,7 @@ object TwitchBotApp extends App {
 
       }
 
-  val tickFlow = OnTickFlow().source.run()
+  val tickFlow = OnTickFlow(ampqConfig).source.run()
 
   val httpRoutesBinding = TwitchBotApi.runApi
 

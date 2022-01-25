@@ -13,6 +13,7 @@ import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.util.ByteString
 import api.TwitchBotApi.system
 import common.MessageLogger.logMessage
+import configs.TwitchAmpqConfig
 import customCommands.commands.BetChangedNotification
 import db.DataBaseIO
 import model._
@@ -21,10 +22,10 @@ import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-case class BettingEndpoints() {
+case class BettingEndpoints(ampqConfig: TwitchAmpqConfig) {
 
   val connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
-    "amqp://localhost:5672"
+    ampqConfig.url
   )
 
   def notifyTwitch: Flow[WriteMessage, WriteResult, Future[Done]] =

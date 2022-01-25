@@ -3,11 +3,12 @@ package api
 import akka.http.scaladsl.server.Directives.{path, _}
 import akka.http.scaladsl.server.Route
 import akka.stream.Materializer
+import configs.TwitchAmpqConfig
 
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
 
-case class ConfigurationRoutes()(implicit
+case class ConfigurationRoutes(ampqConfig: TwitchAmpqConfig)(implicit
     ec: ExecutionContext,
     mat: Materializer
 ) {
@@ -17,13 +18,13 @@ case class ConfigurationRoutes()(implicit
       path("recurringNotification")(
         RecurringNotificationEndpoints().ordersRoute
       ) ~ path("startBet")(
-        BettingEndpoints().startBetRoute
+        BettingEndpoints(ampqConfig).startBetRoute
       ) ~ path("finishBet")(
-        BettingEndpoints().finishBetRoute
+        BettingEndpoints(ampqConfig).finishBetRoute
       ) ~ path("filteredTerms")(
         FilteredTermsEndpoints().termsRoute
       ) ~ path("betState")(
-        BettingEndpoints().getBetStateRoute
+        BettingEndpoints(ampqConfig).getBetStateRoute
       ) ~ path("customCommand")(
         CustomCommandEndpoints().commandsRoute
       )

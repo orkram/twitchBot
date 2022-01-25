@@ -11,7 +11,9 @@ import akka.stream.alpakka.amqp.{
 }
 import akka.stream.scaladsl.{Flow, RestartSource, Source}
 import akka.util.ByteString
+import common.ConfigLoader
 import common.MessageLogger.logMessage
+import configs.TwitchAmpqConfig
 import customCommands.commands.NotificationCommand
 import db.DataBaseIO
 import model.{RecurringNotification, RecurringNotificationTable}
@@ -23,12 +25,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
-case class OnTickFlow() {
+case class OnTickFlow(ampqConfig: TwitchAmpqConfig) {
 
   val tickFrequency: FiniteDuration = 2.second
 
   val connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
-    "amqp://localhost:5672"
+    ampqConfig.url
   )
 
   private val supervisorStrategy: Supervision.Decider = { e =>
