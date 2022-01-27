@@ -5,7 +5,6 @@ import akka.stream.alpakka.slick.scaladsl.Slick
 import akka.stream.scaladsl.Sink
 import model.WhiteListedDomainTable
 import slick.jdbc.PostgresProfile.api._
-import slick.lifted
 import slick.lifted.{AbstractTable, TableQuery}
 
 import scala.concurrent.ExecutionContext.Implicits.global

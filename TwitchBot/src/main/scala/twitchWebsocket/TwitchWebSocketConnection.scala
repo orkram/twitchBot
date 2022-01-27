@@ -9,7 +9,8 @@ import akka.http.scaladsl.model.ws.{
   WebSocketRequest,
   WebSocketUpgradeResponse
 }
-import akka.stream.Materializer
+import akka.http.scaladsl.settings.ClientConnectionSettings
+import akka.stream.{ActorAttributes, Materializer, Supervision}
 import akka.stream.alpakka.amqp.{AmqpConnectionProvider, WriteMessage}
 import akka.stream.scaladsl.{Concat, Flow, Keep, Sink, Source}
 import akka.util.ByteString
@@ -67,15 +68,23 @@ case class TwitchWebSocketConnection(
     .to(Sink.ignore)
 
   private val flow: Flow[Message, Message, Promise[Option[Message]]] =
-    Flow.fromSinkAndSourceMat(
-      toRmqSink,
-      Source
-        .combine(initRmqConnectionSource, fromRmq)(Concat(_))
-        .map(logMessage)
-        .concatMat(Source.maybe[Message])(Keep.right)
-    )(Keep.right)
+    Flow
+      .fromSinkAndSourceMat(
+        toRmqSink,
+        Source
+          .combine(initRmqConnectionSource, fromRmq)(Concat(_))
+          .map(logMessage)
+          .concatMat(Source.maybe[Message])(Keep.right)
+      )(Keep.right)
+      .withAttributes(
+        ActorAttributes.supervisionStrategy(Supervision.stoppingDecider)
+      )
 
   def establishConnection()
       : (Future[WebSocketUpgradeResponse], Promise[Option[Message]]) =
-    Http().singleWebSocketRequest(request, flow)
+    Http().singleWebSocketRequest(
+      request,
+      flow,
+      settings = ClientConnectionSettings(system)
+    )
 }

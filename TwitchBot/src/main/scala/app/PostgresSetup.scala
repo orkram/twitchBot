@@ -18,6 +18,12 @@ object PostgresSetup extends App {
 
   implicit val mat: Materializer = Materializer(system)
 
+  println(
+    DatabaseTablesEntities.tableCreateStatements.map(
+      _.createStatements.mkString("\n")
+    )
+  )
+
   DatabaseTablesEntities.tableDefinisions.foreach {
     db.run(
       _

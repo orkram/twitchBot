@@ -11,6 +11,11 @@ services:
     volumes:
         - ~/.docker-conf/rabbitmq/data/:/home/arkansweet/rabbitmq/lib
         - ~/.docker-conf/rabbitmq/log/:/home/arkansweet/rabbitmq/log
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:15672"]
+        interval: 30s
+        timeout: 10s
+        retries: 5    
     networks:
         internal_network:
             ipv4_address: 172.24.24.45
@@ -23,6 +28,7 @@ services:
     environment:
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=twitchdb
     logging:
         options:
           max-size: 10m
@@ -32,7 +38,7 @@ services:
     volumes:
         - ./postgres-data:/var/lib/postgresql/data
         # copy the sql script to create tables
-        - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+        - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables1.sql
     networks:
         internal_network:
             ipv4_address: 172.24.24.46
@@ -48,6 +54,9 @@ services:
     depends_on:
         - rabbitmq
         - postgres
+    links: 
+        - rabbitmq
+        
   botui:
     image: arkadzizaleuski/twitchbotui:latest
     ports:
