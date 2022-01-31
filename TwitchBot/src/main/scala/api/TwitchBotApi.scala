@@ -12,7 +12,7 @@ import configs.TwitchAmpqConfig
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-object TwitchBotApi {
+case class TwitchBotApi(ampqConfig: TwitchAmpqConfig) {
 
   implicit val system: ActorSystem[Nothing] =
     ActorSystem(Behaviors.empty, "api-system")
@@ -24,9 +24,6 @@ object TwitchBotApi {
 
   val httpConfig: ConfigurationEndpointsConfig =
     ConfigLoader.loadConfig(classOf[ConfigurationEndpointsConfig])
-
-  val ampqConfig: TwitchAmpqConfig =
-    ConfigLoader.loadConfig(classOf[TwitchAmpqConfig])
 
   val routes: Route = ConfigurationRoutes(ampqConfig).baseRoute
 

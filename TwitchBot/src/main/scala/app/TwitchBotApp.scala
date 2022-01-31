@@ -84,6 +84,6 @@ object TwitchBotApp extends App {
 
   val tickFlow = OnTickFlow(ampqConfig).source.run()
 
-  val httpRoutesBinding = TwitchBotApi.runApi
+  val httpRoutesBinding = TwitchBotApi(ampqConfig).runApi
 
 }

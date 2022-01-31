@@ -1,6 +1,8 @@
 package api
 
 import akka.Done
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{Directives, Route}
 import akka.stream.Materializer
@@ -11,7 +13,6 @@ import akka.stream.alpakka.amqp.{
 }
 import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.util.ByteString
-import api.TwitchBotApi.system
 import common.MessageLogger.logMessage
 import configs.TwitchAmpqConfig
 import customCommands.commands.BetChangedNotification
@@ -24,7 +25,7 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 
 case class BettingEndpoints(ampqConfig: TwitchAmpqConfig) {
 
-  val connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
+  def connectionProvider: AmqpUriConnectionProvider = AmqpUriConnectionProvider(
     ampqConfig.url
   )
 
@@ -65,6 +66,9 @@ case class BettingEndpoints(ampqConfig: TwitchAmpqConfig) {
       .via(notifyTwitch)
       .runWith(Sink.seq)
   }
+
+  implicit val system: ActorSystem[Nothing] =
+    ActorSystem(Behaviors.empty, "betting-system")
 
   implicit val executionContext: ExecutionContextExecutor =
     system.executionContext

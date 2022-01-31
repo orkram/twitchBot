@@ -13,19 +13,21 @@ case class ConfigurationRoutes(ampqConfig: TwitchAmpqConfig)(implicit
     mat: Materializer
 ) extends CORSHandler {
 
+  val bettingEndpoints: BettingEndpoints = BettingEndpoints(ampqConfig)
+
   val baseRoute: Route =
     corsHandler(
       path("whiteList")(WhiteListEndpoints().ordersRoute) ~
         path("recurringNotification")(
           RecurringNotificationEndpoints().ordersRoute
         ) ~ path("startBet")(
-          BettingEndpoints(ampqConfig).startBetRoute
+          bettingEndpoints.startBetRoute
         ) ~ path("finishBet")(
-          BettingEndpoints(ampqConfig).finishBetRoute
+          bettingEndpoints.finishBetRoute
         ) ~ path("filteredTerms")(
           FilteredTermsEndpoints().termsRoute
         ) ~ path("betState")(
-          BettingEndpoints(ampqConfig).getBetStateRoute
+          bettingEndpoints.getBetStateRoute
         ) ~ path("customCommand")(
           CustomCommandEndpoints().commandsRoute
         )
