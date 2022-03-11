@@ -36,12 +36,13 @@ case class BettingEndpoints(ampqConfig: TwitchAmpqConfig) {
     ).amqpFlow
 
   val betChangedNotification: BetChangedNotification = BetChangedNotification(
-    "Bet has started PepeLaugh, time to use your points. Use !bet win/lose amount"
+    "Bet has started, time to use your points. Use !bet win/lose amount"
   )
 
-  val betfinishedNotification: BetChangedNotification = BetChangedNotification(
-    "Bet has finished. Check your points!"
-  )
+  def betfinishedNotification(outcome: String): BetChangedNotification =
+    BetChangedNotification(
+      s"Bet has finished as $outcome. Check your points!"
+    )
 
   def betCompletedNotification(b: Bettor, o: String): BetChangedNotification = {
 
@@ -112,7 +113,7 @@ case class BettingEndpoints(ampqConfig: TwitchAmpqConfig) {
       .flatMap { bettors =>
         val writesToTwitch = bettors
           .map(b => betCompletedNotification(b, outcome))
-          .appended(betfinishedNotification)
+          .appended(betfinishedNotification(outcome))
           .map(writeToTwitch)
           .map(f => f.map(_ => 1))
 
@@ -173,11 +174,6 @@ case class BettingEndpoints(ampqConfig: TwitchAmpqConfig) {
     anyOngoingBetSessions.map(_.headOption)
   }
 
-  case class Outcome(
-      outcome: String
-  )
-  object Outcome extends MarshallEntity[Outcome]
-
   def startBetRoute: Route =
     Directives.post { ctx =>
       {
@@ -187,16 +183,23 @@ case class BettingEndpoints(ampqConfig: TwitchAmpqConfig) {
       }
     }
 
-  def finishBetRoute: Route = post {
-    entity(as[Outcome]) { outcome =>
-      complete {
-        finishBet(outcome.outcome)
+  def finishBetRoute: Route =
+    Directives.post {
+      entity(as[Outcome]) { outcome =>
+        complete {
+          finishBet(outcome.outcome)
+        }
+      }
+    } ~ Directives.post { ctx =>
+      {
+        ctx.complete {
+          Future("a")
+        }
       }
     }
-  }
 
-  def getBetStateRoute: Route =
-    get {
+  val getBetStateRoute: Route =
+    Directives.get {
       complete {
         getCurrentBet
       }

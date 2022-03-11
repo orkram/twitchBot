@@ -13,6 +13,9 @@ trait CORSHandler {
     `Access-Control-Allow-Origin`.*,
     `Access-Control-Allow-Credentials`(true),
     `Access-Control-Allow-Headers`(
+      "Access-Control-Allow-Headers",
+      "Access-Control-Allow-Methods",
+      "Access-Control-Allow-Origin",
       "Authorization",
       "Content-Type",
       "X-Requested-With"
