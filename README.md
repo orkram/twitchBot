@@ -1,2 +1,2 @@
 # twitchBot
-Own implementation of high performance Twitch Bot
+Twitch Bot implenetation in Akka streams
