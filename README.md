@@ -1,2 +1,2 @@
 # twitchBot
-Twitch Bot implenetation in Akka streams
+Twitch Bot implementation in Akka streams
